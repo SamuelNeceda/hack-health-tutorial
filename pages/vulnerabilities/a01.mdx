@@ -1,0 +1,111 @@
+# A01:2021 - Broken Access Control
+
+// TODO: Password handling needs to be changed back to be unsecure in the source code.
+
+## Password stored as plain text
+
+Storing a password as a plain text was never a good idea and in a world where we can hash the password in one line of
+code, there is no reason to do it.
+
+1. Navigate to ```jwtAuth.ts``` file.
+2. In method handling the post request to /register route, uncomment the lines after 3rd step.
+```js filename="jwtAuth.ts" {3} copy
+const salt = await bcrypt.genSalt(10);
+const bcryptPassword = await bcrypt.hash(password, salt);
+```
+3. Also do not forget to replace variable ```password``` with ```bcryptPassword```
+
+Those adjustments will hash the password before storing it in the database when the user is being registered.
+
+In method handling the post request to /login route, uncomment the
+line: ```const validPassword = await bcrypt.compare(password, user.rows[0].password);``` and remove the
+line ```const validPassword = password === user.rows[0].password;```.
+By this change, the password will be hashed before comparing it with the password stored in the database.
+
+## JWT Authentication
+
+Our application is using JWT authentication. This means that the user is authenticated by a token that is sent with
+every request. The token is signed with a secret key that is only known to the server and is stored in the local
+storage.
+Despite the fact that JWT is a popular mechanism (but still not the most secure one) for authentication and session
+management in web applications,
+there are some vulnerabilities that can be exploited if not configured properly.
+BONUS: If you want to learn more about JWT, visit its [official website](https://jwt.io/).
+
+### JWT token
+
+In source code, navigate to ```jwtGenerator``` method definition.
+The method generates a token using the payload object and a secret key defined in a .env file.
+Make sure to include field in payload object is unique to the user and cannot be easily guessed by an attacker.
+In our case, we used the user`s password hash, which is a good practice.
+
+#### Expiration
+
+Currently, the token is valid for 1 hour. When logged in to the application in some shared device (coffee shop, library
+etc.) and the user forgets to log out, the token will be valid for the remaining time.
+-> Set the expiration time to a shorter period of time (e.g. 5-10 minutes) to reduce the risk of unauthorized access.
+```return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "15m" });```
+After the expiration time, the user will be logged out and will have to log in again.
+There are some more complex and sophisticated ways to handle this issue, but for the purpose of this tutorial, we will
+keep only the expiration time.
+
+#### Secret key
+
+The secret key is stored in the .env file. The key is used to sign the token and is only known to the server.
+it should be kept secret to prevent unauthorized parties from creating or modifying tokens. If the key is weak or easily
+guessable, an attacker can use it to sign their own JWT tokens, impersonate legitimate users, or modify the payload of
+existing tokens.
+
+-> Replace the ```JWT_SECRET``` value with strong password (use password [genetator](https://www.lastpass.com/features/password-generator))
+
+There are two more things to consider:
+
+1. The secret key should be stored in a secure location. In our case, it is stored in the .env file using the dotenv
+library. Also, as the app is
+not deployed and just running locally, we do not have to explicitly check if the .env file can be accessed publicly.
+2. The last but not least, the secret key should be changed periodically by implementing secret rotation.
+
+## Enhance server security
+
+### CORS
+
+-> Comment out the line ```app.use(cors());``` in ```server.ts``` file and try to login to the HackHealth account.
+-> As you can see, the login is not successful and if we open the Developer Tools -> Console, we get the message like:
+
+```
+Access to fetch at 'http://localhost:5000/auth/verify' from origin 'http://localhost:3000' has been blocked by CORS policy:
+Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource...
+```
+
+When setting up web server, we included cors library and added the following line of code:
+```app.use(cors());```
+This action was deliberately left uncommented in the tutorial, because it is meant to show one important thing.
+Even experienced software engineers sometimes just copy some parts of code and are generally not fully aware of the
+consequences it can have on the application and its security.
+
+In this case, the cors library is used to enable CORS (Cross-Origin Resource Sharing).
+When a web browser tries to access resources on a different domain, it sends an HTTP request to the server hosting the
+resource. If the server does not allow requests from that domain, the browser will block the response and the web
+application will not be able to access the resource.
+
+```app.use(cors());``` allows requests from any domain, which is a security risk.
+**Demo of the attack:**
+1. Open Postman app
+2. Create a new GET request to localhost:5000/api/users and set the header ```Origin: http://evil.com```
+3. Send a request
+4. You should get a response with the list of all users
+
+This was a demonstration that web app is vulnerable to CORS attack.
+
+**Fix:**
+1. Add the following variable to the file.
+```
+const options = {
+   origin: 'http://localhost:3000',}
+   ```
+2. Pass the options object to the cors function.
+```app.use(cors(options));```
+
+**Recreate the attack:**
+1. Send the same request as in the demo
+2. You should get an error message

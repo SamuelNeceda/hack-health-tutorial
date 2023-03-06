@@ -1,7 +1,10 @@
 {
-  "index": "Introduction",
-  "another": "Another Page",
-  "advanced": "Advanced (A Folder)",
+  "index": {
+    "title": "Introduction"
+  },
+  "initialSetup": "Initial Setup",
+  "webAppSetup": "Web App Setup",
+  "vulnerabilities": "Vulnerabilities",
   "about": {
     "title": "About",
     "type": "page"

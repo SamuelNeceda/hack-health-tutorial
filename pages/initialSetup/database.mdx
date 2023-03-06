@@ -1,0 +1,67 @@
+# Database
+
+For the purpose of this tutorial, we will use PostgreSQL database.
+
+## PostgreSQL server
+
+Verify that PostgreSQL server is running locally on your VM.
+Run the following command in the terminal:
+
+```bash
+sudo service postgresql status
+```
+
+or
+
+```bash
+pgrep -u postgres -fa -- -D
+```
+
+When the server is running, you should get positive response from either of the commands above.
+
+### PostgreSQL server not running
+
+Insert following lines step by step into the terminal:
+
+```bash
+sudo /etc/init.d/postgresql start
+sudo service postgresql start
+```
+
+Verify that the server is running.
+
+## Create database
+
+In the terminal, run the following command:
+
+```script
+npm run db-create
+```
+
+## Create tables and insert data
+
+Run the following command:
+
+```script
+npm run db-seed
+```
+
+## Drop database
+
+If you corrupt the database and data in it during exposing the vulnerabilities, you can drop the database and create it
+again.
+Run the following command:
+
+```script
+npm run db-drop
+```
+
+To recreate the database, tables and records, run `npm run db-create` and `npm run db-seed` commands.
+
+## [Optional] Interact with database
+
+1. To interact with PostgreSQL database server, you can use `psql` CLI.
+    * You can type SQL commands to interact with database, and it also provides meta-commands to interact with the
+      server.
+2. Second option is to use preinstalled GUI tool called DBeaver, but we strongly recommend to use `psql` CLI.
+   Tutorial for these two tools is not part of this tutorial, but there are many available online.

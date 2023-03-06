@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="5b9843fd-0ec7-4eaa-a617-efc876512e4b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/aws.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/hack-health-tutorial.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/_app.mdx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/initialSetup/_meta.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/initialSetup/database.mdx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/initialSetup/intro.mdx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/initialSetup/repository.mdx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/initialSetup/vm.mdx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/vulnerabilities/_meta.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/vulnerabilities/a01.mdx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/webAppSetup/_meta.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/webAppSetup/server.mdx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/_meta.json" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_meta.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/advanced.mdx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/advanced/satori.mdx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/another.mdx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/theme.config.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/theme.config.tsx" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/package.json" />
+  </component>
+  <component name="ProjectId" id="2MeYDG5elcNokuQ0KTG074ZZB9s" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/samue/BP/Github/hack-health-tutorial/pages/Web App Setup",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "pnpm",
+    "ts.external.directory.path": "C:\\Users\\samue\\BP\\Github\\hack-health-tutorial\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\samue\BP\Github\hack-health-tutorial\pages\Web App Setup" />
+      <recent name="C:\Users\samue\BP\Github\hack-health-tutorial\pages\Vulnerabilities" />
+      <recent name="C:\Users\samue\BP\Github\hack-health-tutorial\pages\initialSetup" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\samue\BP\Github\hack-health-tutorial\pages\initialSetup" />
+      <recent name="C:\Users\samue\BP\Github\hack-health-tutorial\pages" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5b9843fd-0ec7-4eaa-a617-efc876512e4b" name="Changes" comment="" />
+      <created>1678129393590</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1678129393590</updated>
+      <workItem from="1678129394808" duration="9703000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+</project>
