@@ -5,12 +5,6 @@
   "initialSetup": "Initial Setup",
   "webAppSetup": "Web App Setup",
   "vulnerabilities": "Vulnerabilities",
-  "about": {
-    "title": "About me ↗",
-    "type": "page",
-    "href": "https://www.linkedin.com/in/samuel-ne%C4%8Deda-1a07b81a1/",
-    "newWindow": true
-  },
   "contact": {
     "title": "Contact ↗",
     "type": "page",
