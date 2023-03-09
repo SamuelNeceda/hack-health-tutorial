@@ -40,7 +40,7 @@ const config: DocsThemeConfig = {
     },
     sidebar: {
         titleComponent({title}) {
-            if (title === 'Vulnerabilities') {
+            if (title === 'Cybersecurity') {
                 return <>🕵🏼‍♂️ {title}</>
             }
             if (title === 'A01:2021 - Broken Access Control') {
