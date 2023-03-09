@@ -5,14 +5,10 @@
   "initialSetup": "Initial Setup",
   "webAppSetup": "Web App Setup",
   "vulnerabilities": "Vulnerabilities",
-  "about": {
-    "title": "About",
-    "type": "page"
-  },
   "contact": {
     "title": "Contact ↗",
     "type": "page",
-    "href": "https://twitter.com/shuding_",
+    "href": "mailto:samuel.neceda@student.tuke.sk",
     "newWindow": true
   }
 }
