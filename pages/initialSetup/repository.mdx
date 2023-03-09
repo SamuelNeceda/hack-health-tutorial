@@ -1,3 +1,5 @@
+import {Callout} from 'nextra-theme-docs'
+
 # Repository
 
 ## Choose repository
@@ -5,29 +7,34 @@
 There are two repositories available for you.
 Open them in web browser inside VM.
 
-1. [repository_1](https://git.kpi.fei.tuke.sk/kpi-zp/2023/bp.samuel.neceda/hackHealth) contains all steps from creating the vulnerable web app, to executing attacks and fixing the
-vulnerabilities.
-2. [repository_2](https://git.kpi.fei.tuke.sk/kpi-zp/2023/bp.samuel.neceda/hackHealth) contains final version of the vulnerable web app, in which you can expose the vulnerabilities and fix
-them afterwards.
+1. [repository](https://git.kpi.fei.tuke.sk/kpi-zp/2023/bp.samuel.neceda/hackHealth) contains all steps from creating the vulnerable web app, to executing attacks and fixing the
+vulnerabilities. // TODO: add proper link
+2. [repository](https://git.kpi.fei.tuke.sk/kpi-zp/2023/bp.samuel.neceda/hackHealth) contains final version of the vulnerable web app, in which you can expose the vulnerabilities and fix
+them afterwards. // TODO: add proper link
  * By doing so, you will skip the process of creating the vulnerable web app, and you will focus on the process of
 identifying and fixing the vulnerabilities.
- * When using this option, jump directly after this lecture to lecture ...
+ * When using this option, jump directly after this lecture to lecture [🕵🏼‍♂️Cybersecurity](/cybersecurity/a01).
 
-If you want to skip the process of creating the vulnerable web app, you can use directly the second repository.
-It is strongly recommended to use the first repository, because you will learn how to create the vulnerable web app from
-scratch, and it will
-help you with identifying the vulnerabilities.
+<Callout type="warning" emoji="⚠️">
+    It is strongly recommended to use the [first
+    repository](https://git.kpi.fei.tuke.sk/kpi-zp/2023/bp.samuel.neceda/hackHealth), because you will learn how to
+    create the vulnerable web app from
+    scratch, and it will
+    help you with identifying the vulnerabilities.
+</Callout>
+
 
 ## Clone repository
 
 1. Fork the repository to create your own copy in your personal/university GitLab account.
 2. Clone the repository to your local machine.
 
-## [Optional] - Contributing to the repository
-
-You are more than welcome to contribute to the repository.
-If you find any mistake, or you want to improve the tutorial, you can create a merge request to the original repository.
-It will be reviewed and merged if valid, or the maintainer will request the changes.
+<Callout emoji="💡">
+    You are more than welcome to contribute to the repository.
+    If you find any mistake, or you want to improve the tutorial, you can create a merge request to the original
+    repository.
+    It will be reviewed and merged if valid, or the maintainer will request the changes.
+</Callout>
 
 ## Version control
 
@@ -36,19 +43,23 @@ For version control, you can use preinstalled GitHub Desktop or git CLI supporte
 ## IDE set up
 
 1. Open the cloned repository in an IDE
- * Visual Studio Code and WebStorm are preinstalled on VM, but you can use any other IDE you prefer.
- * For the purpose of this tutorial, WebStorm will be used as demonstration IDE.
+    * Visual Studio Code and WebStorm are preinstalled on VM, but you can use any other IDE you prefer.
+    * For the purpose of this tutorial, WebStorm will be used as demonstration IDE.
 2. When using WebStorm, make sure to log in to your JetBrains free students account to get access to all features.
 3. You can also import your predefined settings from your JetBrains account.
 
 ## Install dependencies
 
-1. In the IDE, open the terminal
-2. Run `npm install` to install all dependencies
+1. In the IDE, open the terminal.
+2. Run `npm install` to install all dependencies.
 
 ## First walkaround...
 
-What you can see is a skeleton of the web app, which is not yet functional.
+<Callout type="info" emoji="ℹ️">
+  What you can see is a skeleton of the web app, which is not yet functional.
 Some part are already implemented, some are missing and the others are commented out.
 Your task is to implement the missing parts and uncomment the commented out parts by following the tutorial.
 Let's get started!
+</Callout>
+
+
