@@ -1,3 +1,5 @@
+import { Tab, Tabs } from 'nextra-theme-docs'
+
 # First things first
 
 ### Security on a first place
@@ -9,7 +11,17 @@ For this purpose, we are going to use Virtual Machine (VM). Before moving to the
 1. Make sure you have **Oracle VM VirtualBox** installed on your machine (version 6.1.40 or higher)
     * If not, download it from the [page](https://www.virtualbox.org/wiki/Downloads)
 2. Make sure **virtualization** is enabled in your BIOS
- * When running Widows, you can check it in the `Task Manager -> Performance -> CPU`
- * When running Linux, you can check it in the `System Information -> CPU`
- * When running Mac, you can check it in the `System Information -> Hardware -> Overview`
+
+<Tabs items={['Windows', 'Mac', 'Linux']} defaultIndex="0">
+  <Tab>
+    When running Widows, you can check it in the `Task Manager -> Performance -> CPU`
+  </Tab>
+  <Tab>
+    When running Linux, you can check it in the `System Information -> CPU`
+  </Tab>
+  <Tab>
+    When running Mac, you can check it in the `System Information -> Hardware -> Overview`
+  </Tab>
+</Tabs>
+
 If virtualization is not enabled, you can use many online tutorials to enable it.
