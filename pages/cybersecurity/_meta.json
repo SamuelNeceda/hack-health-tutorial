@@ -1,3 +1,4 @@
 {
-  "a01": "A01:2021 - Broken Access Control"
+  "brokenAccessControl": "Broken Access Control",
+  "injections": "Injections"
 }

@@ -43,8 +43,11 @@ const config: DocsThemeConfig = {
             if (title === 'Cybersecurity') {
                 return <>🕵🏼‍♂️ {title}</>
             }
-            if (title === 'A01:2021 - Broken Access Control') {
+            if (title === 'brokenAccessControl' || title === 'injections') {
                 return <>❕ {title}</>
+            }
+            if (title === 'About') {
+                return <>ℹ️ {title}</>
             }
             if (title === 'Introduction') {
                 return <>👋 {title}</>
@@ -55,7 +58,7 @@ const config: DocsThemeConfig = {
             if (title === 'Web App Setup') {
                 return <>🚀 {title}</>
             }
-            return <>◽️ {title}</>
+            return <>◽ {title}</>
         }
     },
     feedback: {
