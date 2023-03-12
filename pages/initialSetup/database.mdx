@@ -6,9 +6,11 @@ For the purpose of this tutorial, we will use PostgreSQL database.
 
 ## PostgreSQL server
 
-Verify that PostgreSQL server is running locally on your VM.
-Run the following command in the terminal:
+PostgreSQL server is confired to start automatically when the VM is started, but you can verify that it is running by running the following command in the terminal:
 
+<Callout emoji="💡">
+    When pasting command into the terminal, use CTRL+SHIFT+V to paste the command without formatting.
+</Callout>
 ```bash
 sudo service postgresql status
 ```
@@ -63,9 +65,9 @@ To recreate the database, tables and records, run `npm run db-create` and `npm r
 ## [Optional] Interact with database
 
 <Callout emoji="💡">
-1. To interact with PostgreSQL database server, you can use `psql` CLI.
+    1. To interact with PostgreSQL database server, you can use `psql` CLI.
     * You can type SQL commands to interact with database, and it also provides meta-commands to interact with the
-      server.
-2. Second option is to use preinstalled GUI tool called DBeaver, but we strongly recommend to use `psql` CLI.
-   Tutorial for these two tools is not part of this tutorial, but there are many available online.
+    server.
+    2. Second option is to use preinstalled GUI tool called DBeaver, but we strongly recommend to use `psql` CLI.
+    Tutorial for these two tools is not part of this tutorial, but there are many available online.
 </Callout>

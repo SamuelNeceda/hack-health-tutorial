@@ -1,0 +1,79 @@
+import {Callout} from 'nextra-theme-docs'
+import Image from 'next/image'
+
+# Static Code Analysis
+
+Before actually starting hacking and analyzing the application vulnerabilities, we can run the static code analysis.
+Static code analysis is a process of analyzing the source code of the application without actually running it.
+This is a very useful technique to obtain the initial idea about the application and its vulnerabilities.
+
+## Static Code Analysis Tools
+There are many tools available to serve this purpose. They differ in their features and capabilities,
+whether they are free or commercial etc. Some of the popular tools are:
+* [**Snyk**](https://snyk.io/) (Free)
+* [SonarQube](https://docs.sonarqube.org/latest/) (Free)
+* [Checkmarx](https://checkmarx.com/) (Commercial)
+
+<Callout type="info" emoji="ℹ️">
+    For this tutorial, we will be using Snyk.
+</Callout>
+
+## Snyk
+Snyk also provides plugins for many IDEs, but we will be using the Snyk CLI, because it is more powerful and independent of the IDE.
+
+### Snyk CLI
+Snyk CLI is already installed in the remote machine. You can check it by running the following command:
+```bash
+snyk --version
+```
+
+### Snyk Authentication
+Snyk CLI requires authentication to work. You can authenticate by running the following command in the project directory:
+```bash
+snyk auth
+```
+You will be redirected to a web page, where you can login/register using your Github or Google account.
+<Image src="/snyk_auth.png" alt="Snyk auth" width={1000} height={300}/>
+<br/>
+After successful logn/registration, you will be authenticated for the Snyk CLI.
+<Image src="/snyk_cli_auth.png" alt="Snyk auth" width={1000} height={300}/>
+In the terminal, you will get a message:
+```code
+Your account has been authenticated. Snyk is now ready to be used.
+```
+
+### Snyk settings
+To give Snyk access and permission to your whole codebase, you have to enable it in Settings->Snyk Code->Enable Snyk Code.
+Click the toggle to enable and save the changes.
+<Image src="/snyk_code.png" alt="Snyk auth" width={1000} height={300}/>
+
+<Callout emoji="💡">
+    Now, you are all set to run the static code analysis through CLI commands
+</Callout>
+
+## Analysis
+Run the following command to view all commands available, with their description:
+```bash
+snyk
+```
+For the purpose od this demo, we will be using commands:
+1. In the root directory of the project, run:
+```bash
+snyk code test
+```
+This command will run the static code analysis on the whole codebase and will show the results in the terminal.
+
+2. When we want to analyse the dependencies, navigate to the directory where the dependencies are installed (src/server or src/client) and run:
+```bash
+snyk test
+```
+Alternatively, you can run:
+```bash
+snyk monitor
+```
+This command will continuously monitor the dependencies and will show the results in the browser.
+
+<Callout type="info" emoji="ℹ️">
+    Static code analysis reveals the vulnerabilities it was able to find in the codebase. It is great start when you want to get the initial awareness, but as you will see later in the course, there are far more vulnerabilities than what static code analysis was not able to locate.
+    During the course, we will be addressing also the issues found be Snyk. At the end of the course, we should have fixed all the vulnerabilities found by Snyk.
+</Callout>

@@ -1,1 +1,12 @@
+import {Callout} from 'nextra-theme-docs'
+
 # Server
+
+<Callout emoji="💡">
+    If you encounter the issue when starting server or client side of the application saying: "Port *portNumber* is already in use", run the following commands in the terminal:
+    ```bash
+    sudo netstat -tulpn | grep *portNumber*
+    sudo kill *PID*
+    ```
+    Replace the *portNumber* with the port number you are trying to use and *PID* with the process ID obtained from the first command.
+</Callout>

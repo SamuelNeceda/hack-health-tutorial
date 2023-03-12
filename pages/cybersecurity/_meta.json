@@ -1,4 +1,5 @@
 {
+  "codeAnalysis": "Static Code Analysis",
   "brokenAccessControl": "Broken Access Control",
   "injections": "Injections"
 }
