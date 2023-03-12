@@ -1,0 +1,56 @@
+import {Callout} from 'nextra-theme-docs'
+import Image from 'next/image'
+
+# Vulnerable Packages
+
+We will use Snyk static tool analysis to detect packages with known vulnerabilities. If the fix is provided in another version
+of the package, we will update the package version.
+
+<Callout type="info" emoji="ℹ️">
+    Vulnerable packages were detected at the time of preparing the tutorial. In the future, more vulnerabilites may be
+    detected in used packages, so if it is a case, please try to resolve as many as possible.
+</Callout>
+
+## Client side
+Navigate to the client directory and run:
+```bash
+snyk test
+```
+Among all packages, `nth-check` package introduced through `react-scripts` has a vulnerability.
+Luckily, the fix is provided in the version 2.0.1.
+<Callout type="info" emoji="ℹ️">
+    You will often encounter packages that are introduced by other packages. If the parent package does not provide
+    updated version with fixed child package, you have to track down the child package and change version manually.
+</Callout>
+<br/>
+<Image src="/a06/nth-check.png" alt="Snyk auth" width={1000} height={300}/>
+<Callout emoji="💡">
+    1. In the whole project, replace the version of `nth-check` from 1.0.2 to 2.0.1.<br/>
+    2. Run `npm install` to install the new version of `nth-check`.<br/>
+    3. After running `snyk test` again, there should be no vulnerabilities.
+</Callout>
+
+## Server side
+Navigate to the server directory and run:
+```bash
+snyk test
+```
+There are two packages with known vulnerability: `underscore` and `express-brute`.
+We will start with `underscore`.
+<Image src="/a06/underscore.png" alt="Underscore" width={1000} height={300}/>
+<Callout emoji="💡">
+    1. In the whole project, replace the version of `underscore` from 1.8.3 to 1.13.6.<br/>
+    2. Run `npm install` to install the new version of `underscore`.<br/>
+    3. After running `snyk test` again, this vulnerability should be fixed.
+</Callout>
+
+## Replace the vulnerable package
+Second vulnerability in a server side is identified as `express-brute`. This package is used to prevent brute force attacks.
+All versions of `express-brute` are vulnerable to Rate Limiting Bypass. As long as there is no fix for the package, we should replace it with a different package.
+<Callout emoji="💡">
+    Alternative package for `express-brute` is `express-rate-limit`. It is more popular and has no known
+    vulnerabilities.
+    In this tutorial, we will not replace the implementation of middleware, but you can try it yourself and verify if
+    the replacement works as expected without any vulnerabilities.
+</Callout>
+

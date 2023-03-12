@@ -27,7 +27,7 @@ const config: DocsThemeConfig = {
         </svg>,
     },
     chat: {
-         icon: <svg width="24" height="24" viewBox="0 0 248 204"></svg>,
+        icon: <svg width="24" height="24" viewBox="0 0 248 204"></svg>,
     },
     docsRepositoryBase: 'https://github.com/SamuelNeceda/hack-health-tutorial',
     useNextSeoProps() {
