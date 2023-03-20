@@ -4,11 +4,16 @@ import Image from 'next/image'
 # Vulnerable Packages
 
 We will use Snyk static tool analysis to detect packages with known vulnerabilities. If the fix is provided in another version
-of the package, we will update the package version.
+of the package, we will update the package version. In the case the package is not maintained or the vulnerability cannot be fixed just by updating the package, we will look for and implement proper solution.
 
 <Callout type="info" emoji="ℹ️">
     Vulnerable packages were detected at the time of preparing the tutorial. In the future, more vulnerabilites may be
     detected in used packages, so if it is a case, please try to resolve as many as possible.
+</Callout>
+
+<Callout emoji="💡">
+    You will often encounter packages that are introduced by other packages. If the parent package does not provide
+    updated version with fixed child package, you have to track down the child package and change version manually.
 </Callout>
 
 ## Client side
@@ -16,19 +21,21 @@ Navigate to the client directory and run:
 ```bash
 snyk test
 ```
-Among all packages, `nth-check` package introduced through `react-scripts` has a vulnerability.
-Luckily, the fix is provided in the version 2.0.1.
-<Callout type="info" emoji="ℹ️">
-    You will often encounter packages that are introduced by other packages. If the parent package does not provide
-    updated version with fixed child package, you have to track down the child package and change version manually.
-</Callout>
-<br/>
+Among all packages, `nth-check` and `webpack` packages introduced through `react-scripts` have a vulnerability.
+Luckily, the fix is provided for both of them.
+
+### nth-check package
+<br />
 <Image src="/a06/nth-check.png" alt="Snyk auth" width={1000} height={300}/>
 <Callout emoji="💡">
     1. In the whole project, replace the version of `nth-check` from 1.0.2 to 2.0.1.<br/>
     2. Run `npm install` to install the new version of `nth-check`.<br/>
-    3. After running `snyk test` again, there should be no vulnerabilities.
+    3. After running `snyk test` again, the `nth-check` vulnerability should be fixed.
 </Callout>
+
+### webpack package
+
+Try to resolve this vulnerability by yourself. Just follow the same steps as for `nth-check` package, but update version of `webpack` from 5.75.0 to 5.76.0.
 
 ## Server side
 Navigate to the server directory and run:
@@ -37,6 +44,9 @@ snyk test
 ```
 There are two packages with known vulnerability: `underscore` and `express-brute`.
 We will start with `underscore`.
+
+### underscore package
+<br />
 <Image src="/a06/underscore.png" alt="Underscore" width={1000} height={300}/>
 <Callout emoji="💡">
     1. In the whole project, replace the version of `underscore` from 1.8.3 to 1.13.6.<br/>
@@ -44,13 +54,44 @@ We will start with `underscore`.
     3. After running `snyk test` again, this vulnerability should be fixed.
 </Callout>
 
-## Replace the vulnerable package
+### express-brute package
 Second vulnerability in a server side is identified as `express-brute`. This package is used to prevent brute force attacks.
-All versions of `express-brute` are vulnerable to Rate Limiting Bypass. As long as there is no fix for the package, we should replace it with a different package.
+All versions of `express-brute` are vulnerable to **Rate Limiting Bypass** vulnerability.
+
+#### Rate Limiting Bypass
+Rate limiting bypass is a type of attack that allows an attacker to bypass rate limiting protection if not implemented properly. It can be circumvented by using:
+* proxy server
+* IP address spoofing (IP roration)
+* using specific headers in a request
+* appending "null byte" to the end of targeted fields
+
 <Callout emoji="💡">
     Alternative package for `express-brute` is `express-rate-limit`. It is more popular and has no known
     vulnerabilities.
     In this tutorial, we will not replace the implementation of middleware, but you can try it yourself and verify if
     the replacement works as expected without any vulnerabilities.
 </Callout>
+
+#### Which package to use?
+You may be asking, how to determine which package to use to perform specific tasks. Yeah, sometimes you are happy that the particular package even exists and you do not have to code it yourself and that you find it quickly.
+But, when you want to make your software product secure and reliable, make sure to follow the points below:
+
+* Check if the package is maintained.
+* Check the count of downloads per week.
+* Check the number of open issues and also stars on a GitHub repository.
+
+Now, we will illustratively compare `express-brute` and `express-rate-limit` packages based on the checklist above.
+
+<Image src="/compare_packages.png" alt="Snyk auth" width={1000} height={300}/>
+
+<Callout emoji="💡">
+    After comparison, it is pretty obvious which package to use...
+</Callout>
+
+# Sources:
+https://www.npmjs.com/package/express-rate-limit <br />
+https://www.npmjs.com/package/express-brute <br />
+https://book.hacktricks.xyz/pentesting-web/rate-limit-bypass <br />
+
+
 

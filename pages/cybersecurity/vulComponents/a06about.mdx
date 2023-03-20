@@ -1,1 +1,27 @@
+import {Callout} from 'nextra-theme-docs'
+
 # About
+
+Vulnerable and outdated components is on 6th position on the OWASP Top 10 2021 list.
+It is a common problem with (in many cases) easy to fix solutions. Developers are often not aware of
+vulnerabilities it can rise and how severe they can be.
+
+<Callout type="info" emoji="ℹ️">
+    Some of you maybe remember the Log4J vulnerability, which originated in December 2021. The vulnerability affects the
+    Log4j library, which is a popular open-source logging library used in many Java applications, including web
+    applications and enterprise systems. The vulnerability allows an attacker to execute arbitrary code remotely on a
+    vulnerable server by exploiting a feature in Log4j that allows users to embed expressions inside log messages.
+    The severity of the vulnerability led to urgent fixes. Even in the company I work for, at that time, it was the
+    highest priority task and was taken care of in a matter of hours to not risk any breaches which could have been
+    caused by this vulnerability.
+</Callout>
+
+# How to prevent
+* Use an automated dependency checker.
+* Remove unused dependencies and unncecessary features.
+* Obtains packages only from trusted sources and verify the integrity of the packages.
+
+
+# Sources:
+https://owasp.org/Top10/A06_2021-Vulnerable_and_Outdated_Components/ <br />
+https://www.youtube.com/watch?v=0-abhd-CLwQ
