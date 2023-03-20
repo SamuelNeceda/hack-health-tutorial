@@ -1,6 +1,7 @@
 {
   "codeAnalysis": "Static Code Analysis",
-  "brokenAccessControl": "A01 Broken Access Control",
-  "injections": "A03 Injections",
-  "vulComponents": "A06 Vulnerable and Outdated Components"
+  "a01": "A01 Broken Access Control",
+  "a03": "A03 Injections",
+  "a06": "A06 Vulnerable and Outdated Components",
+  "a07": "A07 Identification and Authentication Failures"
 }

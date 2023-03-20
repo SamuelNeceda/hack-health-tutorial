@@ -43,7 +43,7 @@ const config: DocsThemeConfig = {
             if (title === 'Cybersecurity') {
                 return <>🕵🏼‍♂️ {title}</>
             }
-            if (title === 'brokenAccessControl' || title === 'injections') {
+            if (title === 'a01' || title === 'injections') {
                 return <>❕ {title}</>
             }
             if (title === 'About') {
