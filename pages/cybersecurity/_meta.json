@@ -1,5 +1,6 @@
 {
   "codeAnalysis": "Static Code Analysis",
+  "tools": "Tools",
   "a01": "A01 Broken Access Control",
   "a03": "A03 Injections",
   "a06": "A06 Vulnerable and Outdated Components",

@@ -1,9 +1,18 @@
 import {Callout} from 'nextra-theme-docs'
 
-### CORS
+# CORS
 
--> Comment out the line `app.use(cors());{:js}` in `server.ts` file and try to login to the HackHealth account.
--> As you can see, the login is not successful and if we open the Developer Tools -> Console, we get the message like:
+<Callout type="info" emoji="ℹ️">
+    CORS (Cross-Origin Resource Sharing) is a mechanism that allows restricted resources on a web page to be requested
+    from another domain outside the domain from which the first resource was served.
+    To put in simple words, when a web browser tries to access resources on a different domain, it sends an HTTP request
+    to the server hosting the resource. If the server does not allow requests from that domain, the browser will block
+    the response and the web application will not be able to access the resource.
+</Callout>
+
+## Demo
+1. Comment out the line `app.use(cors());{:js}` in `server.ts` file and try to log in to the HackHealth account.
+2. As you can see, the login is not successful and if we open the Developer Tools -> Console, we get the message like:
 <Callout type="error" emoji="️🚫">
     Access to fetch at 'http://localhost:5000/auth/verify' from origin 'http://localhost:3000' has been blocked by CORS
     policy:
@@ -17,29 +26,27 @@ This action was deliberately left uncommented in the tutorial, because it is mea
 Even experienced software engineers sometimes just copy some parts of code and are generally not fully aware of the
 consequences it can have on the application and its security.
 
-In this case, the cors library is used to enable CORS (Cross-Origin Resource Sharing).
-When a web browser tries to access resources on a different domain, it sends an HTTP request to the server hosting the
-resource. If the server does not allow requests from that domain, the browser will block the response and the web
-application will not be able to access the resource.
+<Callout emoji="💡">
+    Now, uncomment the line `app.use(cors());{:js}` and try to log in to the HackHealth account again.
+</Callout>
 
-`app.use(cors());{:js}` allows requests from any domain, which is a security risk.
-**Demo of the attack:**
-1. Open Postman app
-2. Create a new GET request to localhost:5000/api/users and set the header `Origin: http://evil.com`
-3. Send a request
-4. You should get a response with the list of all users
+Your login should be successful.
 
-This was a demonstration that web app is vulnerable to CORS attack.
+### Good practise
+We are developing everythin locally, so we do not have to be aware of the risks of CORS attacks. However, when we deploy
+our application to the production environment, we should be aware of the security risks and take appropriate measures.
+You should always define the origin of the requests that are allowed to access your API.
 
-**Fix:**
 1. Add the following variable to the file.
-```js filename="jwtAuth.ts" {3} copy showLineNumbers
+```js filename="jwtAuth.ts" copy showLineNumbers
 const options = {
-   origin: 'http://localhost:3000'}
-   ```
+   origin: 'http://localhost:3001'}
+```
+
 2. Pass the options object to the cors function.
 `app.use(cors(options));{:js}`
 
-**Recreate the attack:**
-1. Send the same request as in the demo
-2. You should get an error message
+By doing so, we are allowing only requests from the origin `http://localhost:3001` to access our API.
+
+# Resources
+https://medium.com/@Arockne/a-brief-introduction-to-cors-1e30183ae339

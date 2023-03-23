@@ -1,0 +1,117 @@
+import {Callout} from 'nextra-theme-docs'
+import Image from 'next/image'
+
+# Brute Force
+
+## About
+
+## Attack
+In this demo, we will demonstrate that HackHealth app does not have any prevention from brute force attacks.
+<Callout type="info" emoji="ℹ️">
+    Form of attack will be dictionary attack, where the attacker tries to guess the password by trying all possible
+    combinations from given set.
+</Callout>
+1. Navigate to the HackHealth login screen.
+2. Open Burp Suite and if not already setup, follow the [tutorial](/cybersecurity/tools/burpsuite).
+3. Turn on intercept in Burp Suite.
+4. In the HackHealth app, try to log in with valid user and invalid password. <br/>
+    **email**: samuel.neceda@gmail.com <br/>
+    **password**: invalid <br/>
+5. In Burp Suite`s HTTP history tab, last request should be the POST request to the login endpoint.
+    If not, click `Forward` button in Proxy tab to forward the request to the server.
+6. Right click on it and select `Send to Intruder`.
+<Image src="/burp_intruder.png" alt="Snyk auth" width={800} height={300}/>
+According to an image, you can see parameters which are included in the request and response.
+7. Message was sent to the Intruder tool. In the Intruder tab, you can see the request which was sent to the server.
+8. As you can see, payload positions are marked with green color and $ sign.
+9. We will demonstrate the situation, when the attacker knows the email of the user and tries to guess the password.
+10. Remove the $ signs bordering the email value, so the email will be static.
+11. Keep default attack type `Sniper`.
+12. In the Payloads tab, load the values for passwords from `/home/hacker/resources/` in the `Payload Options` section.
+
+<Image src="/burp_list.png" alt="Snyk auth" width={500} height={300}/>
+
+<Callout emoji="💡">
+    We will be using set of 100 commonly used weak passwords. There are many other sets, which contains huge amount of
+    commonly used or leaked usernames and passwords.
+    For usernames, you can use [SecLists](https://github.com/danielmiessler/SecLists) set and for passwords
+    [rockyou](https://github.com/josuamarcelc/common-password-list). Kali Linux also provides some password dictionary
+    files as part of its standard installation.
+</Callout>
+
+13. Now, we will start the attack. Click `Start Attack` button.
+During the attack, every password from the list will be tried against the email.
+14. After the attack is finished, important information for us are `Status` codes. Also, when clicking on each row with password, we can see in the bottom the request and response of the server.
+`Status`:
+- **200** - password is correct
+- **401** - password is incorrect
+15. We can sort the table by `Status` column and see that the first row with `Status` 200 is the correct password.
+**password**: secret
+<Image src="/burp_succ.png" alt="Snyk auth" width={800} height={300}/>
+
+16. **Attack was successful!**
+
+<Callout emoji="💡">
+    Intruder tool in Burp Suite is not the best tool for brute force attacks, but it is easy to use with good
+    documentation and very detailed results.
+    Also, some functionalities are disabled and attacks are time throttled in Community version. Other great tool
+    serving this purpose is hydra, which is more powerful and is also preinstalled in Kali Linux.
+</Callout>
+
+## Prevention
+We will implement protection against brute force attacks in the hackHealth app source code using [express-brute](https://www.npmjs.com/package/express-brute) npm package.
+<Callout type="info" emoji="ℹ️">
+    As you will found out in [A06: Vulnerable and Outdated components](/cybersecurity/a06/demo), using this package is
+    not the most optimal solution, but as you are aware, process of development is about constant improvements and
+    learning.
+</Callout>
+
+1. In the `src/server/src/middleware` create a new file called `bruteforcePrevention.ts`
+2. Insert following code into the file:
+```js filename="bruteforcePrevention.ts" copy showLineNumbers
+const expressBrute = require("express-brute");
+
+const store = new expressBrute.MemoryStore();
+const bruteforce = new expressBrute(store, {
+    freeRetries: 4,
+    minWait: 0.5 * 60 * 1000,
+    maxWait: 0.5 * 60 * 1000,
+    lifetime: 24 * 60 * 60,
+    failCallback: function (req, res, next, nextValidRequestDate) {
+        const nextValidRequestTime = nextValidRequestDate.toLocaleTimeString();
+        res.status(429).json({
+            success: false,
+            message: 'Too many failed attempts, please try again after 30 seconds at ' + nextValidRequestTime,
+            nextValidRequestDate: nextValidRequestDate.toLocaleString()
+        });
+    }
+});
+
+export default bruteforce;
+```
+
+After 5 failed attempts, the user will be blocked for 30 seconds and then will be blocked for every failed attempt.
+<Callout emoji="💡">
+    Change displayed message to be more generic and do not include the time when the user will be able to try again.
+    This will make it harder for attackers to predict and plan next attacks on the system.
+</Callout>
+
+Now, all you need to do is to import the `bruteforce` variable and use it as middleware in the `src/server/src/routes/jwtAuth.ts` file and add it to the `login` route.
+```js filename="jwtAuth.ts"  copy showLineNumbers
+router.post("/login", bruteforce.prevent, inputValidation, async (req, res) => {
+    // rest of the code
+    });
+```
+
+## Verification
+Try to again start an attack with the same properties as before. In the attack progress, you should see that only first five request were processed and the rest were blocked.
+After 30 seconds, new requests will be processed and so on. We can conclude, that we have successfully implemented simple protection against brute force attacks and we are now ready to move on to the next topic.
+
+
+
+
+# Sources
+* https://owasp.org/www-community/controls/Blocking_Brute_Force_Attacks
+* https://pentestlab.blog/2012/09/10/password-list-for-penetration-testing/
+* https://portswigger.net/burp/documentation/desktop/tutorials/brute-forcing-a-login-using-burp-intruder
+* https://www.youtube.com/watch?v=-CMBoJ60K1A&t=949s

@@ -1,0 +1,52 @@
+import {Callout} from 'nextra-theme-docs'
+import Image from 'next/image'
+
+# Burp Suite
+
+# About
+Burp or Burp Suite is a set of tools used for penetration testing of web applications. It aims to be an all in one set of tools and its capabilities can be enhanced by installing add-ons.
+For the purpose of this tutorial, we will be using the free community version, but for more advanced features, you can purchase the professional version.
+During the course of this tutorial, we will be using tools:
+* Proxy
+* Intruder
+
+**Proxy** is an intercepting proxy which gives us a power to see and modify the contents of the requests
+and responses while they are in transit. <br />
+**Intruder** is a tool which allows us to perform automated attacks on web applications. It allows us to
+brute-force on login forms, dictionary attacks on fields suspected for being vulnerable to XSS or SQL injection, ...
+
+# Setting up
+1. Open burpsuite app (Community edition is preinstalled on Kali Linux)
+2. Create Temporary project
+3. For the configuration, keep "Use Burp defaults" checked and click "Start Burp"
+4. New project is created and Burp Suite is ready to use
+
+# Proxy
+1. Go to the proxy tab in the top menu. Intercept should be set to off.
+<Image src="/burp_start.png" alt="Snyk auth" width={600} height={300}/>
+2. CLick on the "Open browser" button in the top right corner. <br/>
+    This will open a new browser window with Burp Suite as a proxy. <br/>
+    You can also use your favourite browser and set the proxy to Burp Suite, but it required some additional configuration.
+3. Go to the website you want to test. In our case: http://localhost:3001/ <br/>
+    (the app (server and client) should be obviously running)
+4. Turn the Intercept on. <br/>
+    Now, every request and response will be intercepted by Burp Suite.
+5. In the HackHealt app, click on "Login" button
+6. In the Burp Suite, in the HTTP history tab, you can see all requests and responses made. <br/>
+7. Try to login with correct credentials. <br/>
+    After hitting the "Login" button, nothing really happens in HackHealt app. <br/>
+    In Burp Suite, in Intercept tab, you can see that the request was intercepted. <br/>
+    You can see all the details and by pressing "Forward" button (2 times), you can send the request to the server and dashboard appears.
+<br/>
+
+<Callout emoji="💡">
+    You have successfully intercepted a request and seen, how much information we were able to get from it. You can play a little more with a **Proxy** tool, but we will use it later on (and also with **Intruder** tool)
+</Callout>
+
+
+
+
+
+
+# Sources
+* https://www.geeksforgeeks.org/what-is-burp-suite/

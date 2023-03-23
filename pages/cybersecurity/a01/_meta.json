@@ -1,5 +1,6 @@
 {
   "about": "About",
   "login": "Login",
-  "cors": "CORS"
+  "cors": "CORS",
+  "bruteForce": "Brute Force"
 }
