@@ -23,13 +23,13 @@ Snyk also provides plugins for many IDEs, but we will be using the Snyk CLI, bec
 
 ### Snyk CLI
 Snyk CLI is already installed in the remote machine. You can check it by running the following command:
-```bash
+```bash copy
 snyk --version
 ```
 
 ### Snyk Authentication
 Snyk CLI requires authentication to work. You can authenticate by running the following command in the project directory:
-```bash
+```bash copy
 snyk auth
 ```
 You will be redirected to a web page, where you can login/register using your Github or Google account.
@@ -53,22 +53,22 @@ Click the toggle to enable and save the changes.
 
 ## Analysis
 Run the following command to view all commands available, with their description:
-```bash
+```bash copy
 snyk
 ```
 For the purpose od this demo, we will be using commands:
 1. In the root directory of the project, run:
-```bash
+```bash copy
 snyk code test
 ```
 This command will run the static code analysis on the whole codebase and will show the results in the terminal.
 
 2. When we want to analyse the dependencies, navigate to the directory where the dependencies are installed (src/server or src/client) and run:
-```bash
+```bash copy
 snyk test
 ```
 Alternatively, you can run:
-```bash
+```bash copy
 snyk monitor
 ```
 This command will continuously monitor the dependencies and will show the results in the browser.

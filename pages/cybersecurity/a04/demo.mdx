@@ -1,0 +1,21 @@
+# Generation of Error Message Containing Sensitive Information
+
+**CWE-209**
+
+## Demo
+In the login screen of the web app, enter the valid username and invalid password. What message is displayed?
+
+```
+Invalid password.
+```
+
+Now, enter the invalid username and valid/invalid password. The message being displayed is:
+```
+Invalid username.
+```
+
+Both error messages indicate whether an user exists or not. Tt relates to a weakness in the authentication mechanism where an attacker can obtain information about the validity of the username or password by observing the system's response to invalid login attempts.
+Therefore, it's essential to provide generic error messages to users when authentication fails to prevent such attacks.
+
+## Prevention
+In the source code, navigate to the file `jwtAuth.ts` and based on displayed error messages, change the error messages to generic ones.

@@ -11,13 +11,14 @@ PostgreSQL server is confired to start automatically when the VM is started, but
 <Callout emoji="💡">
     When pasting command into the terminal, use CTRL+SHIFT+V to paste the command without formatting.
 </Callout>
-```bash
+
+```bash copy
 sudo service postgresql status
 ```
 
 or
 
-```bash
+```bash copy
 pgrep -u postgres -fa -- -D
 ```
 
@@ -27,7 +28,7 @@ When the server is running, you should get positive response from either of the 
 
 Insert following lines step by step into the terminal:
 
-```bash
+```bash copy
 sudo /etc/init.d/postgresql start
 sudo service postgresql start
 ```
@@ -38,7 +39,7 @@ Verify that the server is running.
 
 In the terminal, run the following command:
 
-```bash
+```bash copy
 npm run db-create
 ```
 
@@ -46,7 +47,7 @@ npm run db-create
 
 Run the following command:
 
-```bash
+```bash copy
 npm run db-seed
 ```
 
@@ -56,7 +57,7 @@ If you corrupt the database and data in it during exposing the vulnerabilities, 
 again.
 Run the following command:
 
-```bash
+```bash copy
 npm run db-drop
 ```
 

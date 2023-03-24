@@ -1,21 +1,61 @@
-# Demo
+# Use of Hard-coded Credentials
+**CWE-798**
 
-## Confirmation of user`s identity
+## About
+Securing the sensitive data or credentials like:
+* API credentials
+* Session Secret Key
+* DB Connection Credentials
+* Security Tokens
+is a very important task for any application. If the credentials are not secured properly, then the attacker can easily access the sensitive data and misuse them.
 
-### Vulnerability
-In the login screen of the web app, enter the valid username and invalid password. What message is displayed?
+One common way how to handle this is by using environment variables. The credentials are stored in the environment variables and are accessed by the application. This way the credentials are not hard-coded in the app.
 
+## Demo
+1. In the root directory, run
+```bash copy
+snyk code test
 ```
-Invalid password.
+Among the results, you should see also medium severity vulnerability: `Use of Hardcoded Credentials`.
+
+2. We will move all hardcoded credential into `.env` file as environment variables.
+3. In the `src/server/.env`, insert the following:
+ ```bash filename=".env" copy showLineNumbers
+# Database configuration
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=hackhealthdb
 ```
 
-Now, enter the invalid username and valid/invalid password. The message being displayed is:
-```
-Invalid username.
+4. In following files, replace the hardcoded credentials with environment variables: <br />
+**Files:**
+    * dbCreate.ts
+    * dbDrop.ts
+    * dbSeed.ts
+    * dbServer.ts
+
+**Example for dbDrop.ts:**
+```typescript filename="dbDrop.ts" copy showLineNumbers
+const dotenv = require('dotenv');
+const { Client } = require('pg');
+
+dotenv.config();
+
+const client = new Client({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD
+});
+
+// rest of the code ...
 ```
 
-Both error messages indicate whether an user exists or not. Tt relates to a weakness in the authentication mechanism where an attacker can obtain information about the validity of the username or password by observing the system's response to invalid login attempts.
-Therefore, it's essential to provide generic error messages to users when authentication fails to prevent such attacks.
+5. After replacing the credentials with environment variables, this vulnerability should be gone.
 
-## Patch
-In the source code, navigate to the file `jwtAuth.ts` and based on displayed erorr messages, change the error messages to generic ones.
+
+
+# Sources
+* https://www.geeksforgeeks.org/where-should-secret-keys-should-be-stored-for-a-node-js-app/
