@@ -58,6 +58,30 @@ const config: DocsThemeConfig = {
             if (title === 'Web App Setup') {
                 return <>🚀 {title}</>
             }
+            if (title === 'Final Words') {
+                return <>🏆 {title}</>
+            }
+            if (title === 'Tools') {
+                return <>🛡️ {title}</>
+            }
+            if (title === 'Static Code Analysis') {
+                return <>📝 {title}</>
+            }
+            if (title === 'Database') {
+                return <>💾 {title}</>
+            }
+            if (title === 'Virtual Machine') {
+                return <>💻 {title}</>
+            }
+            if (title === 'Repository') {
+                return <>🐙 {title}</>
+            }
+            if (title === 'First things first') {
+                return <>🏁 {title}</>
+            }
+            if (title === 'A01 Broken Access Control' || title === 'A02 Cryptographic Failures' || title === 'A03 Injections'|| title === 'A04 Insecure Design'|| title === 'A05 Security Misconfiguration'|| title === 'A06 Vulnerable and Outdated Components'|| title === 'A07 Identification and Authentication Failures' || title === 'A08 Software and Data Integrity Failures' || title === 'A09 Security Logging and Monitoring Failures' || title === 'A10 Server-Side Request Forgery' ) {
+                return <>❕ {title}</>;
+            }
             return <>◽ {title}</>
         },
         defaultMenuCollapseLevel: 1,

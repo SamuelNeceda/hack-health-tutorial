@@ -1,11 +1,15 @@
 {
   "codeAnalysis": "Static Code Analysis",
-  "tools": "Tools",
+  "essentialTools": "Tools",
   "a01": "A01 Broken Access Control",
   "a02": "A02 Cryptographic Failures",
   "a03": "A03 Injections",
   "a04": "A04 Insecure Design",
   "a05": "A05 Security Misconfiguration",
   "a06": "A06 Vulnerable and Outdated Components",
-  "a07": "A07 Identification and Authentication Failures"
+  "a07": "A07 Identification and Authentication Failures",
+  "a08": "A08 Software and Data Integrity Failures",
+  "a09": "A09 Security Logging and Monitoring Failures",
+  "a10": "A10 Server-Side Request Forgery",
+  "finalWords": "Final Words"
 }
