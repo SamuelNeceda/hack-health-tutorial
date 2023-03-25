@@ -1,5 +1,6 @@
 import {Callout} from 'nextra-theme-docs'
 import Image from 'next/image'
+import CheckBoxItem from '../../../components/CheckBox'
 
 # Vulnerable Packages
 
@@ -78,11 +79,16 @@ Rate limiting bypass is a type of attack that allows an attacker to bypass rate 
 
 ## Which package to use?
 You may be asking, how to determine which package to use to perform specific tasks. Yeah, sometimes you are happy that the particular package even exists and you do not have to code it yourself and that you find it quickly.
-But, when you want to make your software product secure and reliable, make sure to follow the points below:
+But, when you want to make your software product secure and reliable, make sure to follow the checklist below:
 
-* Check if the package is maintained.
-* Check the count of downloads per week.
-* Check the number of open issues and also stars on a GitHub repository.
+<Callout emoji="💡">
+    You can pick any of your personal/school project and try to apply the checklist below. If the check is fulfilled, you can mark it as done.
+</Callout>
+
+<br />
+<CheckBoxItem text="Check if the package is maintained." />
+<CheckBoxItem text="Check the count of downloads per week." />
+<CheckBoxItem text="Check the number of open issues and also stars on a GitHub repository." />
 
 Now, we will illustratively compare `express-brute` and `express-rate-limit` packages based on the checklist above.
 

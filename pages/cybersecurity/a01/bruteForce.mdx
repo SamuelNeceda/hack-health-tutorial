@@ -28,7 +28,7 @@ In this demo, we will demonstrate that HackHealth app does not have any preventi
 5. In Burp Suite\`s `HTTP history` tab, last request should be the POST request to the login endpoint.
 If not, click `Forward` button in Proxy tab to forward the request to the server.
 6. Right click on it and select `Send to Intruder`.
-<Image src="/burp_intruder.png" alt="Snyk auth" width={800} height={300}/>
+<Image src="/burpSuite/burp_intruder.png" alt="Snyk auth" width={1000} height={300}/>
 According to an image, you can see parameters which are included in the request and response. <br/>
 
 7. Message was sent to the `Intruder` tool. In the Intruder tab, you can see the request which was sent to the server.
@@ -38,7 +38,7 @@ According to an image, you can see parameters which are included in the request 
 11. Keep default attack type `Sniper`.
 12. In the `Payloads` tab, load the values for passwords from `/home/hacker/resources/` in the `Payload Options` section.
 
-<Image src="/burp_list.png" alt="Snyk auth" width={500} height={300}/>
+<Image src="/burpSuite/burp_list.png" alt="Snyk auth" width={700} height={300}/>
 
 <Callout emoji="💡">
     We will be using set of 100 commonly used weak passwords. There are many other sets, which contains huge amount of
@@ -56,7 +56,7 @@ During the attack, every password from the list will be tried against the email 
 - **401** - password is incorrect
 15. We can sort the table by `Status` column and see that the first row with `Status` 200 is the correct password.
 **password**: secret
-<Image src="/burp_succ.png" alt="Snyk auth" width={800} height={300}/>
+<Image src="/burpSuite/burp_succ.png" alt="Snyk auth" width={1000} height={300}/>
 
 16. **Attack was successful!** <br />
 In HackHealth app, you can try to log in with obtained password and verify you are able to access the dashboard.
