@@ -2,6 +2,11 @@ import {Callout} from 'nextra-theme-docs'
 
 # JWT Authentication
 
+<Callout type="warning" emoji="🔍">
+  **CWE-256**: Plaintext Storage of a Password <br />
+    It has implications in other categories, such as previous "A1 Broken Access Control" if the attacker is able to use the obtained credentials to gain unauthorized access to the system.
+</Callout>
+
 <Callout type="info" emoji="ℹ️">
     Our application is using JWT authentication. This means that the user is authenticated by a token that is sent with
     every request. The token is signed with a secret key that is only known to the server and is stored in the local

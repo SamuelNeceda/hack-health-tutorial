@@ -1,6 +1,4 @@
 {
   "about": "About",
-  "bruteForce": "Brute Force",
-  "login": "JWT Authentication",
-  "cors": "CORS"
+  "bruteForce": "Brute-force attack"
 }

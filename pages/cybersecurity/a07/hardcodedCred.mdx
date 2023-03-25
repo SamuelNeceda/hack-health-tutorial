@@ -1,0 +1,82 @@
+import {Callout} from 'nextra-theme-docs'
+
+# Use of Hard-coded Credentials
+
+<Callout type="warning" emoji="🔍">
+  **CWE-798**: Improper Restriction of Authentication Attempts
+</Callout>
+
+## About
+Securing the sensitive data or credentials like:
+* API credentials
+* Session Secret Key
+* DB Connection Credentials
+* Security Tokens
+is a very important task for any application. If the credentials are not secured properly, then the attacker can easily access the sensitive data and misuse them.
+
+<Callout type="info" emoji="ℹ️">
+    One common way how to handle this is by using **environment variables**. Environment variables are present outside the application and reside in the Operating System or container of the application where the application is deployed. Beside storing the sensitive information, they have the ability to provide different configuration for different environments (dev, stage, prod, etc.)
+</Callout>
+
+## Demo
+1. In the root directory, run
+```bash copy
+snyk code test
+```
+Among the results, you should see also medium severity vulnerability: `Use of Hardcoded Credentials`.
+
+2. We will move all hardcoded credential into `.env` file as environment variables.
+3. In the `src/server/.env`, insert the following:
+ ```bash filename=".env" copy showLineNumbers
+# Database configuration
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=hackhealthdb
+```
+
+4. In following files, replace the hardcoded credentials with environment variables: <br />
+**Files:**
+    * dbCreate.ts
+    * dbDrop.ts
+    * dbSeed.ts
+    * dbServer.ts
+
+<Callout emoji="💡">
+    To read the environment variable from .env file, we are using parser from `dotenv` package. It loads the environment variables from the .env file into the process.env object. We can access any environment variable using process.env.[ENV_VARIABLE_NAME].
+</Callout>
+
+**Example for dbDrop.ts:**
+```typescript filename="dbDrop.ts" copy showLineNumbers
+const dotenv = require('dotenv');
+const { Client } = require('pg');
+
+dotenv.config();
+
+const client = new Client({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD
+});
+
+// rest of the code ...
+```
+
+5. After replacing the credentials with environment variables in all affected files, this vulnerability should be gone after running `snyk code test` again.
+
+## Prevention
+Credentials should never be hard-coded in the application. One of the practices is to use environment variables. Other ways to prevent this vulnerability are:
+* Use of a credential manager
+* Use of a key management system
+* Use of a password vault
+
+In real world applications, it is recommended to use methods mentioned above above rather than environment-variables.
+
+<Callout emoji="💡">
+    When using environment variables, `.env` file should be added to `.gitignore` file to prevent it from being committed to the repository. We will not do it in this demo, because you are working with your own local copy of the repository.
+</Callout>
+
+# Sources
+* https://www.geeksforgeeks.org/where-should-secret-keys-should-be-stored-for-a-node-js-app/

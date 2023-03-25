@@ -59,7 +59,8 @@ const config: DocsThemeConfig = {
                 return <>🚀 {title}</>
             }
             return <>◽ {title}</>
-        }
+        },
+        defaultMenuCollapseLevel: 1,
     },
     feedback: {
         content: 'Questions or Suggestions?',
