@@ -1,0 +1,113 @@
+import {Callout} from 'nextra-theme-docs'
+import Image from 'next/image'
+
+# Information exposure
+<Callout type="warning" emoji="🔍">
+  **CWE-200**: Exposure of Sensitive Information to an Unauthorized Actor
+</Callout>
+
+## About
+As the name suggests, information exposure vulnerability refers to exposure of sensitive information to an actor that is not explicitly authorized to have access to that information. Consequences resulted from it can vary from minor to severe, depending on the type of information that is exposed.
+
+## Attack
+We are going to observe the header of the response of the server.
+1. Use following curl command to send a request to the server.
+```bash copy
+curl -I http://localhost:5000/health
+```
+
+<Callout type="info" emoji="ℹ️">
+    For sending the request, you can also use Postman, but the aim of this is also to show you how to use curl. Curl is a command-line tool included in most operating systems that allows sending HTTP requests and view responses in the terminal.
+    If you prefer GUI applications, you can use Postman.
+</Callout>
+
+2. You should get a response similar to the following:
+```bash copy showLineNumbers {2,3}
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Access-Control-Allow-Origin: http://localhost:3001
+Vary: Origin
+Content-Type: application/json; charset=utf-8
+Content-Length: 15
+ETag: W/"f-v/Y1JusChTxrQUzPtNAKycooOTA"
+Date: Sun, 26 Mar 2023 12:49:45 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+```
+
+3. Investigate the response and determine, which information is sensitive and could be used to exploit the application.
+
+4. The information that could potentially be used by an attacker in this request response includes:
+* **X-Powered-By** header: Reveals that the server is powered by Express.js. This information could be used to target known vulnerabilities or weaknesses in the framework or its dependencies.
+* **Access-Control-Allow-Origin** header: Reveals that the server allows requests from the origin http://localhost:3001. If this header is set to a wildcard (*), it could potentially allow cross-site scripting (XSS) attacks or other types of attacks that rely on cross-origin requests.
+* ... information contained in other headers can also potentially serve as an attack vector.
+
+### Security Headers Scanner
+We are going to use the [Security Headers Scanner](https://securityheaders.com/) to check the security headers of the HackHealt app. It will also give us recommendations on how to improve the security.
+
+<Callout emoji="💡">
+    To use the **Security Headers Scanner**, we need to make the Express server publicly available. We will use [**ngrok**](https://ngrok.com/) to expose local server to the Internet.
+</Callout>
+
+1. ngrok is already installed in the VM. You can verify by running following command in the terminal:
+```bash copy
+ngrok version
+```
+2. Make sure server is running locally.
+3. In the command line, run:
+```bash copy
+ngrok http 5000
+```
+You should get a response similar to the following:
+<Image src="/ngrok/ngrok_server.png" alt="Snyk auth" width={1000} height={300}/>
+
+<Callout type="info" emoji="ℹ️">
+    Marked part in `Forwarding` field contains the URL to publicly access your local server. Kind of like a tunnel to your local server. Magic, right?😄
+</Callout>
+
+4. Copy the URL from the `Forwarding` field and paste it into the **Security Headers Scanner**.
+<Callout emoji="💡">
+    At the end of the URL, add `/health` to check existing endpoint.<br />
+    Final URL should look like this: `https://<ngrok_string>.ngrok.io/health`
+</Callout>
+
+5. Scan the URL and observe the results.
+<Image src="/ngrok/ngrok_fail.png" alt="Snyk auth" width={1000} height={300}/>
+As you can see, the scan reveals that the server is not configured properly. It is missing all most scrucial security headers.
+
+## Prevention
+We are going to use **Helmet middleware** to prevent information exposure.
+Helmet automatically sets various HTTP headers and also remove some to comply with web security standards. It is a collection of 14 smaller middleware functions.
+
+1. In `index.js` file, import `helmet` middleware:
+```js filename="index.ts" copy
+import helmet from "helmet";
+```
+
+2. Add `helmet` middleware to the server:
+```js filename="index.ts" copy
+app.use(helmet());
+```
+
+3. Server is due to nodemon restarted automatically. Try to scan the URL again in the **Security Headers Scanner**.
+<Image src="/ngrok/ngrok_succ.png" alt="Snyk auth" width={1000} height={300}/>
+By just adding 2 lines of code, we were able to drastically improve the security of our application.
+
+<Callout type="info" emoji="ℹ️">
+    Helmet sets header to default values. You can customize the headers by passing options to the middleware. For more information, visit [page](https://blog.logrocket.com/using-helmet-node-js-secure-application/#configuring-security-headers-helmet).
+</Callout>
+
+
+
+## Verification
+Try running the curl command again to see the response.
+```bash copy
+curl -I http://localhost:5000/health
+```
+As you can observe, many headers related to security has been added. Also, the `X-Powered-By` header has been removed, so the attacker can no longer determine which framework is used.
+
+## Sources
+* https://blog.logrocket.com/using-helmet-node-js-secure-application/
+* https://cwe.mitre.org/data/definitions/200.html
+* https://ngrok.com/product
+* https://securityheaders.com/
