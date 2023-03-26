@@ -59,7 +59,7 @@ ngrok version
 ngrok http 5000
 ```
 You should get a response similar to the following:
-<Image src="/ngrok/ngrok_server.png" alt="Snyk auth" width={1000} height={300}/>
+<Image src="/ngrok/ngrok_server.png" alt="ngrok server" width={1000} height={300}/>
 
 <Callout type="info" emoji="ℹ️">
     Marked part in `Forwarding` field contains the URL to publicly access your local server. Kind of like a tunnel to your local server. Magic, right?😄
@@ -72,7 +72,7 @@ You should get a response similar to the following:
 </Callout>
 
 5. Scan the URL and observe the results.
-<Image src="/ngrok/ngrok_fail.png" alt="Snyk auth" width={1000} height={300}/>
+<Image src="/ngrok/ngrok_fail.png" alt="headers security check failed" width={1000} height={300}/>
 As you can see, the scan reveals that the server is not configured properly. It is missing all most scrucial security headers.
 
 ## Prevention
@@ -90,7 +90,7 @@ app.use(helmet());
 ```
 
 3. Server is due to nodemon restarted automatically. Try to scan the URL again in the **Security Headers Scanner**.
-<Image src="/ngrok/ngrok_succ.png" alt="Snyk auth" width={1000} height={300}/>
+<Image src="/ngrok/ngrok_succ.png" alt="headers security check succeeded" width={1000} height={300}/>
 By just adding 2 lines of code, we were able to drastically improve the security of our application.
 
 <Callout type="info" emoji="ℹ️">
