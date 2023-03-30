@@ -1,0 +1,170 @@
+import {Callout} from 'nextra-theme-docs'
+import Image from 'next/image'
+
+# Security logging
+
+<Callout type="warning" emoji="🔍">
+    **CWE-778**: Insufficient Logging
+</Callout>
+
+## About
+When security-critical events are not logged properly, such as a failed login attempts, this can make malicious behavior more difficult to detect and may hinder forensic analysis after an attack succeeds.
+
+## Attack
+We are going to launch simple DoS (Denial of Service) attack on the HackHealth application. What we are going to demostrate is, that even though such an attack can have a huge impact on the application`s web server, currently there is no logging in place to detect such an attack.
+
+1. Make sure web server is running. If not, run the following command in the terminal:
+  ```bash
+  npm run dev
+  ```
+### Monitoring
+In VM, to monitor requests and CPU load, we  are going to use `tcpdump`, `nload` and `Task Manager`. <br />
+  * `tcpdump` is a command-line packet analyzer. It can be used to display TCP/IP and other packets being transmitted or received over a network to which the computer is attached. <br />
+Run the following command in the terminal:
+  ```bash
+  sudo tcpdump -i lo -n -s0 -vvv port 5000
+  ```
+This will capture all the packets on port 5000. <br />
+  * `nload` is a command-line network monitoring tool. It can be used to monitor network traffic, both incoming and outgoing. <br />
+Run the following command in the terminal:
+  ```bash
+  nload
+  ```
+Click on the right arrow to see the network traffic on localhost. <br />
+   * You can also use `Task Manager` to monitor CPU load. <br />
+### DoS
+2. For the simulated attack, we are going to use two simultanious approaches to make the load even larger. <br />
+  - In the terminal, **paste** the following command:
+  ```bash
+  sudo hping3  127.0.0.1 -p 5000 --flood
+  ```
+This command will send a flood of packets to the local loopback address on port 5000 using the `hping3` tool. The aim is to flood the targeted web server with a large volume of traffic.
+  - The second command you should **paste** to another terminal window is:
+  ```bash
+  for i in {1..1000}; do curl -s -X GET http://localhost:5000/health > /dev/null & done
+  ```
+In short, this command will send 1000 requests to the web server route `/health`. It will not display any output and also by using `&` flag, the curl will run in the background and without the need to wait for each request to finish. <br />
+3. **Start and attack by running the two commands mentioned in the previous step.**
+Monitor the traffic and CPU load. During an attack, you can also try some different request using `curl` or `Postman` and see how the web server responds.
+<Callout type="info" emoji="ℹ️">
+    As was mentioned earlier, the DoS attack performed by us is a simple one. It does not have large impact on the web
+    server. On the other hand, your main goal was not to cause harm, but to demonstrate the lack of logging in the
+    application. As you can see, there is no way you can detect such an attack and take any action to prevent it.
+</Callout>
+
+The video below shows the attack and monitoring tools in action. <br />
+<br/>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Ijs6DEaTbss" title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen></iframe>
+
+
+<Callout emoji="💡">
+    When you would like to perform a more serious attack, even DDoS (Distributed Denial of Service), you can use tools
+    such as **LOIC** (Low Orbit Ion Cannon) or **Slowloris**. Like with any other attack, you should always make sure
+    you have the permission of the owner of the targeted system and that you are not breaking any laws, because it can
+    have serious consequences. <br/>
+    More legal approach is to use some available stress testing tools such as **JMeter** or **Apache Bench** to test the
+    performance of the web server. <br/>
+</Callout>
+
+## Prevention
+The best way to prevent such an attack is to implement a proper logging system. This way, you can detect any suspicious activity and take action to prevent it. <br />
+In the HackHealth application, we are going to use the `winston` package to implement a logging system. <br />
+1. Install `winston` package
+  ```bash
+  npm install winston
+  ```
+2. Create a new file `logger.js` in the `utils` folder and add the following code:
+```js filename="logger.ts" copy showLineNumbers
+// Import necessary packages from Winston and related libraries
+import {createLogger, format, transports} from 'winston';
+import DailyRotateFile = require("winston-daily-rotate-file")
+import path from 'path';
+
+// Define a log format to be used by the logger
+const logFormat = format.combine(
+    format.printf(({level, message, label, timestamp}) => {
+        return `${timestamp} [${label}] ${level}: ${message}`;
+    })
+);
+
+// Define a directory to store log files
+const logDirectory = path.join(__dirname, 'logs');
+
+// Create a logger instance with specified options
+const logger = createLogger({
+    level: 'info', // Set logging level to 'info'
+    format: format.combine(
+        format.label({label: path.basename(require.main.filename)}), // Add the name of the main script file as a label
+        format.timestamp({format: 'YYYY-MM-DD HH:mm:ss'}), // Add a timestamp to log messages
+        format.errors({stack: true}), // Print error stack traces if present
+        format.splat(), // Enables the use of the spread operator to log additional arguments
+        logFormat // Use the previously defined log format
+    ),
+    transports: [
+        new transports.Console(), // Output log messages to the console
+        new DailyRotateFile({
+            filename: `${logDirectory}/%DATE%-combined.log`,
+            datePattern: 'YYYY-MM-DD',
+            maxSize: '10m', // Set the maximum size of each log file to 10MB
+            maxFiles: '14d' // Set the maximum number of log files to keep for 14 days
+        }),
+        new DailyRotateFile({
+            filename: `${logDirectory}/%DATE%-error.log`,
+            datePattern: 'YYYY-MM-DD',
+            maxSize: '10m',
+            maxFiles: '14d',
+            level: 'error' // Set the logging level for this file to 'error'
+        })
+    ]
+});
+
+// Export the logger instance as the default export of this module
+export default logger;
+```
+
+3. Familiarize yourself with the code with the help of provided comments. <br />
+4. We are going to refactor current logging in the `index.js` file. Import the logger as `import logger from "./utils/logger";` and replace the logging as following:
+```js filename="index.ts" copy showLineNumbers {3,6}
+try {
+    app.listen(PORT, (): void => {
+        logger.info(`Server is successfully running on port ${PORT}`);
+    });
+} catch (error) {
+    logger.error(`Error occurred: ${error.message}`);
+}
+```
+5. After the server is restarted, you should see new folder called `logs` containing log files. <br />
+<Callout type="info" emoji="ℹ️">
+    Logger is configured in a way to create separete log files for every day. This way, you can easily track the
+    activity of the application and detect any suspicious activity. Maximum size of every log file is set to 10MB and
+    the maximum number of log files to keep is set to 14 days.
+</Callout>
+6. As we do not want to waste time, we are not going to refactor the logic of logging in the whole project (but you sure can). For demonstrative purposes, we are going to add code to log every request made to the web server. 
+<br/>
+  Add the following code after the middleware definition and import missing named exports from `express`:
+```js filename="index.ts" copy showLineNumbers
+// Log every request
+app.use((req: Request, res: Response, next: NextFunction) => {
+  logger.info(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
+  next();
+});
+```
+
+## Verification
+1. We are going to verify if by properly added logging we can detect the attack performed earlier. <br />
+2. Run the attack again by running the two commands from the previous step. <br />
+3. After the attack is finished, you should see the logs in the designated files and also in the console.
+<Callout emoji="💡">
+    With properly implemented logging, we can spot any suspicious activity and take action to prevent it in early
+    stages. Additionaly, it is a good practise to integrate also monitoring tool which will be capable to detect any
+    suspicious activity and notify the administrator.
+</Callout>
+
+## Sources
+* https://owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures/
+* https://github.com/winstonjs/winston
+* https://www.cloudflare.com/en-gb/learning/ddos/ddos-attack-tools/how-to-ddos/
+* https://cwe.mitre.org/data/definitions/778.html

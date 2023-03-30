@@ -2,3 +2,6 @@
 node_modules
 .idea
 .idea/workspace.xml
+.idea/dbnavigator.xml
+.idea/sonarlint/issuestore/index.pb
+.idea/sonarlint/securityhotspotstore/index.pb
