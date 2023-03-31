@@ -1,0 +1,109 @@
+import {Callout} from 'nextra-theme-docs'
+import Image from 'next/image'
+
+# Server Side Request Forgery (SSRF)
+
+<Callout type="warning" emoji="🔍">
+    **CWE-918**: Server Side Request Forgery (SSRF)
+</Callout>
+
+## About
+SSRF (Server-Side Request Forgery) vulnerabilities arise when a web application fails to verify the user-provided URL when requesting a remote resource. This flaw enables attackers to manipulate the application into sending a customized request to an unintended destination, even if the system is safeguarded by network access controls such as firewalls or VPNs.
+
+## Attack
+<Callout emoji="💡">
+    As an attacker, you are going to try different URLs with the goal of accessing internal resources of the application.
+</Callout>
+1. For launching the attack, you are going to use ***Burp Suite**, with which you have already familiarized yourself in the previous chapters.
+2. Open Burp Suite and in the designated browser, navigate to the `http://localhost:3001/login`.
+3. Log in with a valid user account.
+4. Right in front you is an input field, which should be used to enter a URL of a patient`s Electronic Health Record (EHR). The application will then fetch the EHR from the URL and display it to the user.
+5. In the input field, enter the following URL: `https://www.hack-health.tech/`.
+6. In Burp Suite `HTTP history`, you can see that the web server has sent a request to the URL you entered and received a response.
+<Image src="/a10/ssrf1.png" alt="nth-check package" width={1000} height={300}/>
+<Callout type="info" emoji="ℹ️">
+    POST request with user-provided URL was sent to a `/url` route on a web server.
+    When you navigate to the definiton of `/url` route in the source code, you can see that axios library is used to send a GET request to the provided URL, and returns the response data to the client.
+</Callout>
+7. Right click on the request and send the request to Repeater.
+8. In the Repeater, change the URL to `http://localhost:5000/health` and send the request.
+<Image src="/a10/ssrf2.png" alt="nth-check package" width={1000} height={300}/>
+<Callout emoji="💡">
+    As you can see, we were able to access the `/health` route on the web server, which should not be accessible from the outside world.
+</Callout>
+9. Now, in the Repeater change the URL to `http://ifconfig.pro` and send the request.
+<Image src="/a10/ssrf3.png" alt="nth-check package" width={1000} height={300}/>
+<Callout emoji="💡">
+    In the rendered response, you can see the IP address of the web server and some additional information. The public IP matches your IP address because the server is running locally. However, if the server was deployed, the information we will receive could serve as a valuable asset for an attacker.
+</Callout>
+
+## Prevention
+Whenever you are working with user-provided URLs, you should always make sure that the URL is valid and that it is not pointing to an internal resource. You can use the following technique to prevent SSRF attacks:
+1. In the `externalSource.ts` file, define a whitelist of allowed domains.
+```js filename="externalSource.ts" copy showLineNumbers {3}
+// Define a list of approved external domains
+const approvedDomains = [
+    "https://www.healthit.gov"
+];
+```
+2. Before making a request to the URL, check if the URL is in the whitelist.
+```js filename="externalSource.ts" copy showLineNumbers
+// Check if the requested URL is in the list of approved domains
+const isApproved = approvedDomains.some(domain => url.startsWith(domain));
+if (!isApproved) {
+    throw new Error("Requested URL is not approved");
+}
+```
+3. Final implementation should be:
+```js filename="externalSource.ts" copy showLineNumbers
+const express = require("express");
+const router = express.Router();
+const axios = require("axios");
+
+// Define a list of approved external domains
+const approvedDomains = [
+    "https://www.healthit.gov"
+];
+
+router.post("/", async (req, res) => {
+    try {
+        const {url} = req.body;
+
+        // Check if the requested URL is in the list of approved domains
+        const isApproved = approvedDomains.some(domain => url.startsWith(domain));
+        if (!isApproved) {
+            throw new Error("Requested URL is not approved");
+        }
+
+        // Make a request to the URL provided by the user
+        const response = await axios.get(url);
+
+        // Return the response from the URL to the client
+        res.send(response.data);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Something went wrong");
+    }
+});
+
+module.exports = router;
+```
+
+## Verification
+1. Into the input field, enter the following URL: `http://localhost:5000/health`.
+2. Open Developer Tools -> Console
+3. Submit the URL.
+4. In the console, you should see the following error:
+<Image src="/a10/devTools.png" alt="nth-check package" width={1000} height={300}/>
+5. In the same way, you can try other requests used for attack, everytime you should see the same error and failure to fetch the data.
+6. Try to enter a valid URL, for example `https://www.healthit.gov/faq/what-electronic-health-record-ehr`. The application should fetch the data from the URL and display them in the console.
+<Callout emoji="💡">
+    We have successfully implemented prevention from SSRF attacks. Now, the application will only allow requests to the domains defined in the whitelist and any other internal or external URL will be rejected.
+</Callout>
+
+## Sources
+* https://sethsec.blogspot.com/2015/12/exploiting-server-side-request-forgery.html
+* https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery_%28SSRF%29/
+* https://www.youtube.com/watch?v=Zyt7lUO3mY8
+* https://www.youtube.com/watch?v=-pNYmgK_dWo
+
