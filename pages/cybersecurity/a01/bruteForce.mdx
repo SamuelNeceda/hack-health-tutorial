@@ -20,7 +20,7 @@ Some basic types of brute force attacks:
 In this demo, we will demonstrate that HackHealth app does not have any prevention from dictionary brute force attacks.
 
 1. Navigate to the HackHealth login screen.
-2. Open Burp Suite and if not already setup, follow the [tutorial](/cybersecurity/tools/burpsuite).
+2. Open Burp Suite and if not already setup, follow the [🛡️tutorial](/cybersecurity/tools/burpsuite).
 3. Turn on `Intercept` in Burp Suite.
 4. In the HackHealth app, try to log in with valid user and invalid password. <br/>
 **email**: samuel.neceda@gmail.com <br/>
@@ -71,7 +71,7 @@ In HackHealth app, you can try to log in with obtained password and verify you a
 ## Prevention
 We will implement protection against brute force attacks in the hackHealth app source code using [express-brute](https://www.npmjs.com/package/express-brute) package.
 <Callout type="info" emoji="ℹ️">
-    As you will found out in [A06: Vulnerable and Outdated components](/cybersecurity/a06/demo), using this package is
+    As you will found out in [❕A06: Vulnerable and Outdated components](/cybersecurity/a06/vulPackages), using this package is
     not the most optimal solution, but as you are aware, process of development is about constant improvements and
     learning ...
 </Callout>

