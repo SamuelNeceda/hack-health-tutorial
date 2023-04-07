@@ -1,0 +1,49 @@
+import {Callout} from 'nextra-theme-docs'
+
+# A08:2021 – Software and Data Integrity Failures
+
+<Callout type="info" emoji="ℹ️">
+For the information about **Software and Data Integrity Failures**, visit [page](https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/)
+</Callout>
+
+# Lack of integrity verification
+
+<Callout type="warning" emoji="🔍">
+  **CWE-494**: Download of Code Without Integrity Check
+</Callout>
+
+## About
+**Software and Data Integrity Failures** can take many forms, particularly since as the web evolves it is more and more common to use third party code and services within web applications. These failures can be summarised as follows:
+* Usage of code that does not verify integrity of source
+* Usage of third party plugins where you do not control the source
+* Plugins and extensions from untrusted sources
+* The introduction of or potential for compromise or unauthorised access
+* Auto-updates assume trust of the source
+
+## Auto-update of packages
+Auto-update of packages is easy to implement, often with good intentions, but can be a source of compromise. Auto update of packages can be done by installing a package:
+```bash copy
+npm -g install npm-check-updates
+```
+and then running following command in the terminal:
+```bash copy
+ncu -u
+```
+The last command will update all the packages in the `package.json` file to the latest version.
+<Callout type="warning" emoji="⚠️">
+The vulnerability is, that auto-update of packages is made without sufficient integrity verification. As long as repositotories are open-source, attacker can upload its own version of the package which is then distributed and run on all installations where automatic update is enabled. 
+</Callout>
+
+### Prevention
+* **It is not a good practise to use auto-update of packages.** Instead, you should use a package manager that allows you to specify the version of the package you want to install.
+* As was already mentioned in [A06 - Vulnerable packages](/cybersecurity/a06/vulPackages), you should only use libraries and packages from trusted sources.
+* Also, you should always use static code analyser (Snyk, OWASP Dependency-Check), which also check for known vulnerabilities in the packages you use.
+<Callout type="warning" emoji="⚠️">
+This is not a bulletproof prevention, because in this type of attack, attackers rely on the fact that no security scanner will detect vulnerability of the package right after installation of new compromised version and it will give them enough time to compromise the system before being detected.
+</Callout>
+
+## Sources
+* https://www.youtube.com/watch?v=TwfLvG0D6dc
+* https://www.youtube.com/watch?v=n2znsiP4BGU
+* https://dev.to/imomaliev/til-2021-09-20-automatically-update-package-json-versions-1c7p
+* https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/
