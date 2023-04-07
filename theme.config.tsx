@@ -76,6 +76,9 @@ const config: DocsThemeConfig = {
             if (title === 'Repository') {
                 return <>🐙 {title}</>
             }
+            if (title === 'Intro') {
+                return <>📖 {title}</>
+            }
             if (title === 'First things first') {
                 return <>🏁 {title}</>
             }
