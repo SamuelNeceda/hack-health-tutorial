@@ -60,20 +60,20 @@ Firstly, we are going to gather some internal information about the database and
 ' UNION SELECT usename, NULL FROM pg_user--
 ``` 
 * Leave the password field empty and click on the login button. <br />
-* When you open Developer Tools, in the console, when dig deeper into user.rows, you will see the name of the database which is used. <br />
+* When you open Developer Tools, in the Console, when digging deeper into `user.rows` in JSON response from the server, you will see the type of the database which is used. <br />
 <Image src="/a03/a03_1.png" alt="Burp intruder" width={1000} height={300}/>
 #### **Database name** <br />
-* Enter the following inside the email field on HackHealth login screen.
+* Enter the following inside the email field on HackHealth login screen, keep the password field empty and hit Login.
 ```sql copy
 ' UNION SELECT current_database(), null--
 ```
-* After digging deeper into user.rows, you will see the name of the database: `hackhealthdb` <br />
+* After digging deeper into servers response, in `user.rows`, you will see the name of the database: `hackhealthdb` <br />
 #### **Names of tables** <br />
-In the same way as in the previous step, we can get the name of the database by inserting following code into the email field.
+* In the same way as in the previous step, we can get the name of the database by inserting following code into the email field.
 ```sql copy
 '; SELECT table_name FROM information_schema.tables WHERE table_schema='public'; --
 ```
-* Again, after digging deeper into user[1].rows, you will see the names of the tables. <br />
+* Again, after digging deeper into `user[1].rows`, you will see the names of the tables. <br />
     * useraccount
     * appointment
     * medicalreport
@@ -83,7 +83,7 @@ To sum up, we have gathered the following information: <br />
 * Database name: hackhealthdb
 * Names of tables: useraccount, appointment, medicalreport <br />
 
-We are going to use this information in the next step.
+We are going to use this information in the next steps.
 </Callout>
 
 ### Grant unauthorized access
@@ -99,7 +99,7 @@ SELECT email, password form useraccount WHERE email = '' OR 1=1; --
 ```
 The semicolon (;) terminates the current statement and the two dashes (--) indicate a comment, effectively ignoring the remaining part of the original query. The injected SQL code OR 1=1 will always evaluate to true, effectively bypassing the authentication check and returning all records from the "useraccount" table.
 </Callout>
-* We are now able to see all the users with their login credentials. <br />
+* In the response from the server (`user.rows`), we are now able to see all the users with their login credentials. <br />
 
 ### Corrupt the tables and database
 SQL injection attack is not only about getting the data, but also about corrupting the data. <br />
@@ -109,9 +109,9 @@ SQL injection attack is not only about getting the data, but also about corrupti
 '; DROP TABLE useraccount CASCADE; --
 ```
 * Congratulations, you have just dropped the table `useraccount`! <br />
-* Now, when you try to login with the credentials you have obtained in the previous step, you will not be able to log in -> the table of users just do not exist anymore. <br />
+* Now, when you try to log in with the credentials you have obtained in the previous step, you will not be able to log in -> the table of users just do not exist anymore. <br />
 <Callout type="info" emoji="ℹ️">
-This was made possible only because when creating the tables, fereign key were created with CASCADE option. It means that when the table is dropped, all the tables that depend on it are also dropped. <br />
+This was made possible only because when creating the tables, foreign key were created with CASCADE option. It means that when the table is dropped, all the tables that depend on it are also dropped. <br />
 </Callout>
 
 #### **Drop the database** <br />
@@ -119,13 +119,72 @@ This was made possible only because when creating the tables, fereign key were c
     ```sql copy
 	'; DROP DATABASE hackhealthdb; --
     ``` 
-    you will get an error: `DROP DATABASE cannot run inside a transaction block`.
+    you will get an error in the server log: `DROP DATABASE cannot run inside a transaction block`.
 	This indicates that PostgreSQL does not allow a database to be dropped while there are active connections to it. This is to prevent accidental data loss due to unintended drops. Solution would be to terminate all running connections to the database, but this could not be done through SQL injection. <br />
 	Although the attempt about dropping whole database was not successful, we have  already caused considerable damage.
 
+<Callout type="error" emoji="️🚫">
+  Do not forget to put the database to initial state after the attack. <br />
+  To do so, stop the server and run the following commands in the terminal:
+    ```bash copy
+    npm run db-drop
+    npm run db-create
+    npm run db-seed
+    ```
+    After running the following commands, db should be in the initial state.
+</Callout>
+
 ## Prevention
+To prevent SQL injection attacks, it's important to use **parameterized queries** instead of concatenating user input directly into SQL queries. Parameterized queries use placeholders for user input and sanitize the input to prevent malicious SQL code from being executed. <br />
+In the source code, we can replace current implementation of handling login request with the following code:
+```js filename="jwtAuth.ts"  copy showLineNumbers
+// LOGIN
+router.post("/login", bruteforce.prevent, inputValidation, async (req, res) => {
+    const {email, password} = req.body;
+
+    try {
+        const user = await pool.query(
+            "SELECT * FROM useraccount WHERE email = $1",
+            [email]
+        );
+
+        if (user.rows.length === 0) {
+            return res.status(401).json("Invalid email.");
+        }
+
+        // VUL A02
+        // const validPassword = await bcrypt.compare(password, user.rows[0].password);
+
+        const validPassword = password === user.rows[0].password;
+
+        if (!validPassword) {
+            return res.status(401).json("Invalid password.");
+        }
+
+        const token = generateJWT(user.rows[0].password);
+        res.json({
+            success: true,
+            message: "Authentication successful!",
+            token: token,
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server error");
+    }
+});
+```
+As you can see in the code above, we are using placeholders for user input and sanitizing the input (inputValidation middleware) to prevent malicious SQL code from being executed. <br />
+<br />
+Also, in the file `Login.js` (easily find by pressing Shift+Shift and typing Login.js), we need to delete line:
+```js copy
+console.log(parseJSON)
+```
+By deleting the line, we will no longer be able to see the response from the server in the Console in Developer Tools, which is definitely a better practise.
 
 
 ## Verification
+To verify that the vulnerability has been fixed, you can try running some commands from Attack section again. The result should be, that injecting malicious SQL code into email field will not trigger any unintended behavior. <br /> 
 
 ## Sources
+* https://cwe.mitre.org/data/definitions/89.html\
+* Bachelor thesis
