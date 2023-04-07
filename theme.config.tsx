@@ -82,7 +82,7 @@ const config: DocsThemeConfig = {
             if (title === 'First things first') {
                 return <>🏁 {title}</>
             }
-            if (title === 'A01 Broken Access Control' || title === 'A02 Cryptographic Failures' || title === 'A03 Injections'|| title === 'A04 Insecure Design'|| title === 'A05 Security Misconfiguration'|| title === 'A06 Vulnerable and Outdated Components'|| title === 'A07 Identification and Authentication Failures' || title === 'A08 Software and Data Integrity Failures' || title === 'A09 Security Logging and Monitoring Failures' || title === 'A10 Server-Side Request Forgery' ) {
+            if (title === 'A01 Broken Access Control' || title === 'A02 Cryptographic Failures' || title === 'A03 Injection'|| title === 'A04 Insecure Design'|| title === 'A05 Security Misconfiguration'|| title === 'A06 Vulnerable and Outdated Components'|| title === 'A07 Identification and Authentication Failures' || title === 'A08 Software and Data Integrity Failures' || title === 'A09 Security Logging and Monitoring Failures' || title === 'A10 Server-Side Request Forgery' ) {
                 return <>❕ {title}</>;
             }
             return <>◽ {title}</>

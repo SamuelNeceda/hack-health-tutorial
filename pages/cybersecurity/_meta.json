@@ -4,7 +4,7 @@
   "essentialTools": "Tools",
   "a01": "A01 Broken Access Control",
   "a02": "A02 Cryptographic Failures",
-  "a03": "A03 Injections",
+  "a03": "A03 Injection",
   "a04": "A04 Insecure Design",
   "a05": "A05 Security Misconfiguration",
   "a06": "A06 Vulnerable and Outdated Components",
