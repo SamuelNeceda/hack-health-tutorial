@@ -2,14 +2,14 @@ import {Callout} from 'nextra-theme-docs'
 
 # Database
 
-For the purpose of this tutorial, we will use PostgreSQL database.
+For the purpose of this tutorial, we will use the PostgreSQL database.
 
 ## PostgreSQL server
 
-PostgreSQL server is confired to start automatically when the VM is started, but you can verify that it is running by running the following command in the terminal:
+The PostgreSQL server is confirmed to start automatically when the VM is started, but you can verify that it is running by running the following command in the terminal:
 
 <Callout emoji="💡">
-    When pasting command into the terminal, use CTRL+SHIFT+V to paste the command without formatting.
+    When pasting the command into the terminal, use CTRL+SHIFT+V to paste the command without formatting.
 </Callout>
 
 ```bash copy
@@ -22,11 +22,11 @@ or
 pgrep -u postgres -fa -- -D
 ```
 
-When the server is running, you should get positive response from either of the commands above.
+When the server is running, you should get a positive response from either of the commands above.
 
 ### PostgreSQL server not running
 
-Insert following lines step by step into the terminal:
+Insert the following lines step by step into the terminal:
 
 ```bash copy
 sudo /etc/init.d/postgresql start
@@ -35,7 +35,7 @@ sudo service postgresql start
 
 Verify that the server is running.
 
-## Create database
+## Create a database
 
 In the terminal, run the following command:
 
@@ -61,14 +61,14 @@ Run the following command:
 npm run db-drop
 ```
 
-To recreate the database, tables and records, run `npm run db-create` and `npm run db-seed` commands.
+To recreate the database, tables, and records, run `npm run db-create` and `npm run db-seed` commands.
 
-## [Optional] Interact with database
+## [Optional] Interact with the database
 
 <Callout emoji="💡">
-    1. To interact with PostgreSQL database server, you can use `psql` CLI.
-    * You can type SQL commands to interact with database, and it also provides meta-commands to interact with the
+    1. To interact with the PostgreSQL database server, you can use `psql` CLI.
+    * You can type SQL commands to interact with the database, and it also provides meta-commands to interact with the
     server.
-    2. Second option is to use preinstalled GUI tool called DBeaver, but we strongly recommend to use `psql` CLI.
-    Tutorial for these two tools is not part of this tutorial, but there are many available online.
+    2. Second option is to use preinstalled GUI tool called DBeaver, but we strongly recommend using `psql` CLI.
+    A tutorial for these two tools is not part of this tutorial, but there are many available online.
 </Callout>

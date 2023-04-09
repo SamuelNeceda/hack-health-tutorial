@@ -19,7 +19,7 @@ whether they are free or commercial etc. Some of the popular tools are:
 </Callout>
 
 ## Snyk
-Snyk also provides plugins for many IDEs, but we will be using the Snyk CLI, because it is more powerful and independent of the IDE.
+Snyk also provides plugins for many IDEs, but we will be using the Snyk CLI because it is more powerful and independent of the IDE.
 
 ### Snyk CLI
 Snyk CLI is already installed in the remote machine. You can check it by running the following command:
@@ -33,10 +33,10 @@ Snyk CLI requires authentication to work. You can authenticate by running the fo
 snyk auth
 ```
 <Callout type="warning" emoji="⚠️">
-    Sometimes, when the Google Chrome is opened automatically after running the command, you might lost internet connection. In that case, you can try to restart your connection or just close the VM with option `Save state` and open it again. This should resolve this unpredictable issue.
+    Sometimes, when Google Chrome has opened automatically after running the command, you might lose your internet connection. In that case, you can try to restart your connection or just close the VM with the option `Save state` and open it again. This should resolve this unpredictable issue.
 </Callout>
 
-You will be redirected to a web page, where you can login/register using your Github or Google account.
+You will be redirected to a web page, where you can login/register using your GitHub or Google account.
 <Image src="/codeAnalysis/snyk_auth.png" alt="Snyk authentication" width={1000} height={300}/>
 <br/>
 After successful logn/registration, just click on `Authenticate` button and return to the terminal.
@@ -60,14 +60,14 @@ Run the following command to view all commands available, with their description
 ```bash copy
 snyk
 ```
-For the purpose od this demo, we will be using commands:
+For the purpose of this demo, we will be using commands:
 1. In the root directory of the project, run:
 ```bash copy
 snyk code test
 ```
 This command will run the static code analysis on the whole codebase and will show the results in the terminal.
 
-2. When we want to analyse the dependencies, navigate to the directory where the dependencies are installed (src/server or src/client) and run:
+2. When we want to analyze the dependencies, navigate to the directory where the dependencies are installed (src/server or src/client) and run:
 ```bash copy
 snyk test
 ```
@@ -78,6 +78,6 @@ snyk monitor
 This command will continuously monitor the dependencies and will show the results in the browser.
 
 <Callout type="info" emoji="ℹ️">
-    Static code analysis reveals the vulnerabilities it was able to find in the codebase. It is great start when you want to get the initial awareness, but as you will see later in the course, there are far more vulnerabilities than what static code analysis was not able to locate.
-    During the course, we will be addressing also the issues found be Snyk. At the end of the course, we should have fixed majority of the vulnerabilities found by Snyk.
+    Static code analysis reveals the vulnerabilities it was able to find in the codebase. It is a great start when you want to get the initial awareness, but as you will see later in the course, there are far more vulnerabilities than static code analysis was not able to locate.
+    During the course, we will be addressing also the issues found by Snyk. At the end of the course, we should have fixed the majority of the vulnerabilities found by Snyk.
 </Callout>
