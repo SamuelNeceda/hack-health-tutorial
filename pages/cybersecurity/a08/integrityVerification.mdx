@@ -20,7 +20,9 @@ For the information about **Software and Data Integrity Failures**, visit [page]
 * The introduction of or potential for compromise or unauthorised access
 * Auto-updates assume trust of the source
 
-## Auto-update of packages
+In this lecture, we will focus on the last point, which is **auto-update of packages**.
+
+## Demo
 Auto-update of packages is easy to implement, often with good intentions, but can be a source of compromise. Auto update of packages can be done by installing a package:
 ```bash copy
 npm -g install npm-check-updates
@@ -34,7 +36,7 @@ The last command will update all the packages in the `package.json` file to the 
 The vulnerability is, that auto-update of packages is made without sufficient integrity verification. As long as repositotories are open-source, attacker can upload its own version of the package which is then distributed and run on all installations where automatic update is enabled. 
 </Callout>
 
-### Prevention
+## Prevention
 * **It is not a good practise to use auto-update of packages.** Instead, you should use a package manager that allows you to specify the version of the package you want to install.
 * As was already mentioned in [A06 - Vulnerable packages](/cybersecurity/a06/vulPackages), you should only use libraries and packages from trusted sources.
 * Also, you should always use static code analyser (Snyk, OWASP Dependency-Check), which also check for known vulnerabilities in the packages you use.

@@ -7,27 +7,22 @@ import {Callout} from 'nextra-theme-docs'
 There are two repositories available for you.
 Open them in web browser inside VM.
 
-1. [repository](https://git.kpi.fei.tuke.sk/kpi-zp/2023/bp.samuel.neceda/hackHealth) contains all steps from creating the vulnerable web app, to executing attacks and fixing the
-vulnerabilities. // TODO: add proper link
-2. [repository](https://git.kpi.fei.tuke.sk/kpi-zp/2023/bp.samuel.neceda/hackHealth) contains final version of the vulnerable web app, in which you can expose the vulnerabilities and fix
-them afterwards. // TODO: add proper link
- * By doing so, you will skip the process of creating the vulnerable web app, and you will focus on the process of
-identifying and fixing the vulnerabilities.
- * When using this option, jump directly after this lecture to lecture [🕵🏼‍♂️Cybersecurity](/cybersecurity/codeAnalysis).
+1. [repository](https://git.kpi.fei.tuke.sk/hackhealth/web_app) contains all the neccessary steps for creating a simple monorepo web app using **PERN stack** (PostgreSQL, Express, React, Node.js). You will learn how to create the vulnerable web app from scratch, and it will help you with identifying the vulnerabilities later on. For your convenience, individual lectures have a correspondiing branch in the repository, so even if you miss some parts, you can always catch up.
+2. [repository](https://git.kpi.fei.tuke.sk/hackhealth/cybersecurity) contains final version of the vulnerable web app, in which you can expose the vulnerabilities and fix them afterwards. 
 
 <Callout type="warning" emoji="⚠️">
-    It is strongly recommended to use the [first
-    repository](https://git.kpi.fei.tuke.sk/kpi-zp/2023/bp.samuel.neceda/hackHealth), because you will learn how to
+    It is strongly recommended to start with the 1. [
+    repository](https://git.kpi.fei.tuke.sk/hackhealth/web_app), because you will learn how to
     create the vulnerable web app from
     scratch, and it will
-    help you with identifying the vulnerabilities.
+    help you with identifying the vulnerabilities in the cybersecurity section. If you want to skip the first part and jump directly to the cybersecurity section, you can jump directly after this lecture to lecture [🕵🏼‍♂️Cybersecurity](/cybersecurity/codeAnalysis).
 </Callout>
 
 
 ## Clone repository
 
 1. Fork the repository to create your own copy in your personal/university GitLab account.
-2. Clone the repository to your local machine.
+2. Clone the repository to your local machine, in this case, to the VM. You can store it /home/hacker/Documents/Github, which is already prepared for you.
 
 <Callout emoji="💡">
     You are more than welcome to contribute to the repository.
@@ -43,7 +38,10 @@ For version control, you can use preinstalled GitHub Desktop or git CLI supporte
 ## IDE set up
 
 1. Open the cloned repository in an IDE
-    * Visual Studio Code and WebStorm are preinstalled on VM, but you can use any other IDE you prefer.
+    * Visual Studio Code and WebStorm are preinstalled on VM
+        * **VS Code** - you can log in to your account to sync all your preferred settings
+        * **WebStorm** - you can log in to your JetBrains free students account to get access to all features
+        * you can use **any other IDE** you prefer (but in this case, you will have to install it)
     * For the purpose of this tutorial, WebStorm will be used as demonstration IDE.
 2. When using WebStorm, make sure to log in to your JetBrains free students account to get access to all features.
 3. You can also import your predefined settings from your JetBrains account.
