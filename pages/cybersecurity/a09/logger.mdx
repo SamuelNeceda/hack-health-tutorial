@@ -13,17 +13,17 @@ For the information about **Security Logging and Monitoring Failures**, visit [p
 </Callout>
 
 ## About
-When security-critical events are not logged properly, such as a failed login attempts, this can make malicious behavior more difficult to detect and may hinder forensic analysis after an attack succeeds.
+When security-critical events are not logged properly, such as failed login attempts, this can make malicious behavior more difficult to detect and may hinder forensic analysis after an attack succeeds.
 
 ## Attack
-We are going to launch simple DoS (Denial of Service) attack on the HackHealth application. What we are going to demostrate is, that even though such an attack can have a huge impact on the application`s web server, currently there is no logging in place to detect such an attack.
+We are going to launch a simple DoS (Denial of Service) attack on the HackHealth application. What we are going to demonstrate is, that even though such an attack can have a huge impact on the application`s web server, currently there is no logging in place to detect such an attack.
 
-1. Make sure web server is running. If not, run the following command in the terminal:
+1. Make sure the web server is running. If not, run the following command in the terminal:
   ```bash
   npm run dev
   ```
 ### Monitoring
-In VM, to monitor requests and CPU load, we  are going to use `tcpdump`, `nload` and `Task Manager`. <br />
+In VM, to monitor requests and CPU load, we are going to use `tcpdump`, `nload`, and `Task Manager`. <br />
   * `tcpdump` is a command-line packet analyzer. It can be used to display TCP/IP and other packets being transmitted or received over a network to which the computer is attached. <br />
 Run the following command in the terminal:
   ```bash
@@ -38,7 +38,7 @@ Run the following command in the terminal:
 Click on the right arrow to see the network traffic on localhost. <br />
    * You can also use `Task Manager` to monitor CPU load. <br />
 ### DoS
-2. For the simulated attack, we are going to use two simultanious approaches to make the load even larger. <br />
+2. For the simulated attack, we are going to use two simultaneous approaches to make the load even larger. <br />
   - In the terminal, **paste** the following command:
   ```bash
   sudo hping3  127.0.0.1 -p 5000 --flood
@@ -48,12 +48,12 @@ This command will send a flood of packets to the local loopback address on port 
   ```bash
   for i in {1..1000}; do curl -s -X GET http://localhost:5000/health > /dev/null & done
   ```
-In short, this command will send 1000 requests to the web server route `/health`. It will not display any output and also by using `&` flag, the curl will run in the background and without the need to wait for each request to finish. <br />
+In short, this command will send 1000 requests to the web server route `/health`. It will not display any output and also by using `&` flag, the curl will run in the background without the need to wait for each request to finish. <br />
 3. **Start and attack by running the two commands mentioned in the previous step.**
-Monitor the traffic and CPU load. During an attack, you can also try some different request using `curl` or `Postman` and see how the web server responds.
+Monitor the traffic and CPU load. During an attack, you can also try some different requests using `curl` or `Postman` and see how the web server responds.
 <Callout type="info" emoji="ℹ️">
-    As was mentioned earlier, the DoS attack performed by us is a simple one. It does not have large impact on the web
-    server. On the other hand, your main goal was not to cause harm, but to demonstrate the lack of logging in the
+    As was mentioned earlier, the DoS attack performed by us is a simple one. It does not have a large impact on the web
+    server. On the other hand, your main goal was not to cause harm but to demonstrate the lack of logging in the
     application. As you can see, there is no way you can detect such an attack and take any action to prevent it.
 </Callout>
 
@@ -70,7 +70,7 @@ The video below shows the attack and monitoring tools in action. <br />
     such as **LOIC** (Low Orbit Ion Cannon) or **Slowloris**. Like with any other attack, you should always make sure
     you have the permission of the owner of the targeted system and that you are not breaking any laws, because it can
     have serious consequences. <br/>
-    More legal approach is to use some available stress testing tools such as **JMeter** or **Apache Bench** to test the
+    A more legal approach is to use some available stress testing tools such as **JMeter** or **Apache Bench** to test the
     performance of the web server. <br/>
 </Callout>
 
@@ -131,7 +131,7 @@ export default logger;
 ```
 
 3. Familiarize yourself with the code with the help of provided comments. <br />
-4. We are going to refactor current logging in the `index.js` file. Import the logger as `import logger from "./utils/logger";` and replace the logging as following:
+4. We are going to refactor the current logging in the `index.js` file. Import the logger as `import logger from "./utils/logger";` and replace the logging as follows:
 ```js filename="index.ts" copy showLineNumbers {3,6}
 try {
     app.listen(PORT, (): void => {
@@ -141,10 +141,10 @@ try {
     logger.error(`Error occurred: ${error.message}`);
 }
 ```
-5. After the server is restarted, you should see new folder called `logs` containing log files. <br />
+5. After the server is restarted, you should see a new folder called `logs` containing log files. <br />
 <Callout type="info" emoji="ℹ️">
-    Logger is configured in a way to create separete log files for every day. This way, you can easily track the
-    activity of the application and detect any suspicious activity. Maximum size of every log file is set to 10MB and
+    The logger is configured in a way to create separate log files for every day. This way, you can easily track the
+    activity of the application and detect any suspicious activity. The maximum size of every log file is set to 10MB and
     the maximum number of log files to keep is set to 14 days.
 </Callout>
 6. As we do not want to waste time, we are not going to refactor the logic of logging in the whole project (but you sure can). For demonstrative purposes, we are going to add code to log every request made to the web server. 
@@ -163,8 +163,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 2. Run the attack again by running the two commands from the previous step. <br />
 3. After the attack is finished, you should see the logs in the designated files and also in the console.
 <Callout emoji="💡">
-    With properly implemented logging, we can spot any suspicious activity and take action to prevent it in early
-    stages. Additionaly, it is a good practise to integrate also monitoring tool which will be capable to detect any
+    With properly implemented logging, we can spot any suspicious activity and take action to prevent it in the early
+    stages. Additionally, it is a good practice to integrate also monitoring tool which will be capable to detect any
     suspicious activity and notify the administrator.
 </Callout>
 

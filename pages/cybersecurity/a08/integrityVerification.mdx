@@ -13,12 +13,12 @@ For the information about **Software and Data Integrity Failures**, visit [page]
 </Callout>
 
 ## About
-**Software and Data Integrity Failures** can take many forms, particularly since as the web evolves it is more and more common to use third party code and services within web applications. These failures can be summarised as follows:
-* Usage of code that does not verify integrity of source
-* Usage of third party plugins where you do not control the source
+**Software and Data Integrity Failures** can take many forms, particularly since as the web evolves it is more and more common to use third-party code and services within web applications. These failures can be summarised as follows:
+* Usage of code that does not verify the integrity of the source
+* Usage of third-party plugins where you do not control the source
 * Plugins and extensions from untrusted sources
-* The introduction of or potential for compromise or unauthorised access
-* Auto-updates assume trust of the source
+* The introduction of or potential for compromise or unauthorized access
+* Auto-updates assume the trust of the source
 
 In this lecture, we will focus on the last point, which is **auto-update of packages**.
 
@@ -27,21 +27,21 @@ Auto-update of packages is easy to implement, often with good intentions, but ca
 ```bash copy
 npm -g install npm-check-updates
 ```
-and then running following command in the terminal:
+and then running the following command in the terminal:
 ```bash copy
 ncu -u
 ```
 The last command will update all the packages in the `package.json` file to the latest version.
 <Callout type="warning" emoji="⚠️">
-The vulnerability is, that auto-update of packages is made without sufficient integrity verification. As long as repositotories are open-source, attacker can upload its own version of the package which is then distributed and run on all installations where automatic update is enabled. 
+The vulnerability is, that the auto-update of packages is made without sufficient integrity verification. As long as repositories are open-source, an attacker can upload its version of the package which is then distributed and run on all installations where the automatic update is enabled. 
 </Callout>
 
 ## Prevention
-* **It is not a good practise to use auto-update of packages.** Instead, you should use a package manager that allows you to specify the version of the package you want to install.
+* **It is not a good practice to use auto-update of packages.** Instead, you should use a package manager that allows you to specify the version of the package you want to install.
 * As was already mentioned in [A06 - Vulnerable packages](/cybersecurity/a06/vulPackages), you should only use libraries and packages from trusted sources.
-* Also, you should always use static code analyser (Snyk, OWASP Dependency-Check), which also check for known vulnerabilities in the packages you use.
+* Also, you should always use a static code analyzer (Snyk, OWASP Dependency-Check), which also checks for known vulnerabilities in the packages you use.
 <Callout type="warning" emoji="⚠️">
-This is not a bulletproof prevention, because in this type of attack, attackers rely on the fact that no security scanner will detect vulnerability of the package right after installation of new compromised version and it will give them enough time to compromise the system before being detected.
+This is not a bulletproof prevention, because in this type of attack, attackers rely on the fact that no security scanner will detect the vulnerability of the package right after the installation of a new compromised version and it will give them enough time to compromise the system before being detected.
 </Callout>
 
 ## Sources

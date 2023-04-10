@@ -14,13 +14,13 @@ For the information about **Security Misconfiguration**, visit [page](https://ow
 ## About
 CORS (Cross-Origin Resource Sharing) is a mechanism that allows restricted resources on a web page to be requested
 from another domain outside the domain from which the first resource was served.
-To put in simple words, when a web browser tries to access resources on a different domain, it sends an HTTP request
+To put it in simple words, when a web browser tries to access resources on a different domain, it sends an HTTP request
 to the server hosting the resource. If the server does not allow requests from that domain, the browser will block
 the response and the web application will not be able to access the resource.
 
 ## Demo
 1. In the `jwtAuth.ts` file, comment out the line `app.use(cors());{:js}` in `server.ts` file and try to log in to the HackHealth account.
-2. As you can see, the login is not successful and if we open in browser the Developer Tools (Ctrl + Shift + I) -> Console, we get the message like:
+2. As you can see, the login is not successful, and if we open in browser the Developer Tools (Ctrl + Shift + I) -> Console, we get the message like this:
 <Callout type="error" emoji="️🚫">
     Access to fetch at 'http://localhost:5000/auth/verify' from origin 'http://localhost:3001' has been blocked by CORS
     policy:
@@ -28,9 +28,9 @@ the response and the web application will not be able to access the resource.
     on the requested resource...
 </Callout>
 
-When setting up web server, we included cors library and added the following line of code:
+When setting up the web server, we included the cors library and added the following line of code:
 `app.use(cors());{:js}`
-This action was deliberately left uncommented in the tutorial, because it is meant to show one important thing.
+This action was deliberately left uncommented in the tutorial because it is meant to show one important thing.
 Even experienced software engineers sometimes just copy some parts of code and are generally not fully aware of the
 consequences it can have on the application and its security.
 

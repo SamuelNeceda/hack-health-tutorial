@@ -8,60 +8,59 @@ For the information about **Cryptographic Failures**, visit [page](https://owasp
 
 <Callout type="warning" emoji="🔍">
   **CWE-256**: Plaintext Storage of a Password <br />
-    It has implications in other categories, such as previous "A1 Broken Access Control" if the attacker is able to use the obtained credentials to gain unauthorized access to the system.
+    It has implications in other categories, such as the previous "A1 Broken Access Control" if the attacker can use the obtained credentials to gain unauthorized access to the system.
 </Callout>
 
 <Callout type="info" emoji="ℹ️">
     Our application is using JWT authentication. This means that the user is authenticated by a token that is sent with
     every request. The token is signed with a secret key that is only known to the server and is stored in the local
     storage.
-    Despite the fact that JWT is a popular mechanism (but still not the most secure one) for authentication and session
+    Even though JWT is a popular mechanism (but still not the most secure one) for authentication and session
     management in web applications,
-    there are some vulnerabilities that can be exploited if not configured properly. <br/>
+    some vulnerabilities can be exploited if not configured properly. <br/>
     **BONUS**: If you want to learn more about JWT, visit its [official website](https://jwt.io/).
 </Callout>
 
 ## Password stored as plain text
 
-Storing a password as a plain text was never a good idea and in a world where we can hash the password in one line of
+Storing a password as plain text was never a good idea and in a world where we can hash the password in one line of
 code, there is no reason to do it.
 
 ### Register
 1. Navigate to ```jwtAuth.ts``` file.
-2. In method handling the post request to register route, uncomment the lines after 3rd step.
+2. In the method handling the post request to register route, uncomment the lines after 3rd step.
 ```js filename="jwtAuth.ts"  copy showLineNumbers
 const salt = await bcrypt.genSalt(10);
 const bcryptPassword = await bcrypt.hash(password, salt);
 ```
-3. Replace parameter `password` with `bcryptPassword` in the query.
+3. Replace the parameter `password` with `bcryptPassword` in the query.
 
 <Callout emoji="💡">
-    Those adjustments will hash the password before storing it in the database when the user is being registered.
+    Those adjustments will hash the password before storing it in the database when the user is registered.
 </Callout>
 
 ### Login
-1. In method handling the post request to login route, uncomment the
+1. In the method handling the post request to login route, uncomment the
 line: `const validPassword = await bcrypt.compare(password, user.rows[0].password);{:js}`
 2. Remove the line `const validPassword = password === user.rows[0].password;{:js}`
 3. By this change, the password will be hashed before comparing it with the password stored in the database.
 
 ## JWT token
 
-1. In source code, navigate to `jwtGenerator` method definition in `jwtGenerator.ts` file. <br />
+1. In the source code, navigate to `jwtGenerator` method definition in `jwtGenerator.ts` file. <br />
 The method generates a token using the payload object and a secret key defined in a .env file.
-2. Make sure that field in payload object is unique to the user and cannot be easily guessed by an attacker. <br />
+2. Make sure that field in the payload object is unique to the user and cannot be easily guessed by an attacker. <br />
 In our case, we used the user`s password hash, which is a good practice.
 
 ### Expiration
 
-Currently, the token is valid for 1 hour. When logged in to the application in some shared device (coffee shop, library
-etc.) and the user forgets to log out, the token will be valid for the remaining time. <br />
-Set the expiration time to a shorter period of time (e.g. 5-15 minutes) to reduce the risk of unauthorized access. <br />
+Currently, the token is valid for 1 hour. When logged in to the application in some shared device (coffee shop, library, etc.) and the user forgets to log out, the token will be valid for the remaining time. <br />
+Set the expiration time to a shorter period (e.g. 5-15 minutes) to reduce the risk of unauthorized access. <br />
 `return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "15m" });{:js}` <br />
 After the expiration time, the user will be logged out and will have to log in again. <br />
 
 <Callout emoji="💡">
-    There are some more complex and sophisticated ways to handle this issue, but for the purpose of this tutorial, we
+    There are some more complex and sophisticated ways to handle this issue, but for this tutorial, we
     will
     keep only the expiration time.
 </Callout>
@@ -85,7 +84,7 @@ In `.env` file (src/server/.env), replace the `JWT_SECRET` value with strong pas
 1. The secret key should be stored in a secure location. In our case, it is stored in the .env file using the dotenv
 library. Also, as the app is
 not deployed and just running locally, we do not have to explicitly check if the .env file can be accessed publicly.
-2. The last but not least, the secret key should be changed periodically by implementing secret rotation.
+2. Last but not least, the secret key should be changed periodically by implementing secret rotation.
 
 ## Sources
 * https://www.youtube.com/watch?v=7UQBMb8ZpuE&t=3565s

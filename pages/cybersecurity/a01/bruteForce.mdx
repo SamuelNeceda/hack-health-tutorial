@@ -2,8 +2,7 @@ import {Callout} from 'nextra-theme-docs'
 import Image from 'next/image'
 
 # A01:2021 - Broken Access Control
-Broken Access Control (BAC) represents the most serious risk based on the OWASP Top 10:2021
-security risk of web applications. As a source of vulnerabilities of this type, the
+Broken Access Control (BAC) represents the most serious risk based on the OWASP Top 10:2021. As a source of vulnerabilities of this type, it
 was found in up to **94.5%** of the tested applications.
 
 <Callout type="info" emoji="ℹ️">
@@ -17,49 +16,49 @@ For the information about **Broken Access Control**, visit [page](https://owasp.
 </Callout>
 
 ## About
-Brute force attack is a type of attack where the attacker tries to guess the password by trying all possible combinations from given set.
+A brute force attack is a type of attack where the attacker tries to guess the password by trying all possible combinations from the given set.
 If your web app requires user authentication, you are a possible target for this type of attack.
-How good target you are will only become apparent based on how aware you are of this vulnerability and what authentication methods you have implemented.
+How good a target you are will only become apparent based on how aware you are of this vulnerability and what authentication methods you have implemented.
 Some basic types of brute force attacks:
-- **Dictionary attack** - attacker tries to guess the password by trying all possible combinations from given set.
-- **Rainbow table attack** - attacker tries to guess the password by using precomputed hashes from given set.
+- **Dictionary attack** - attacker tries to guess the password by trying all possible combinations from the given set.
+- **Rainbow table attack** - attacker tries to guess the password by using precomputed hashes from the given set.
 
 
 ## Attack
-In this demo, we will demonstrate that HackHealth app does not have any prevention from dictionary brute force attacks.
+In this demo, we will demonstrate that the HackHealth app does not have any prevention from dictionary brute force attacks.
 
 1. Navigate to the HackHealth login screen.
-2. Open Burp Suite and if not already setup, follow the [🛡️tutorial](/cybersecurity/tools/burpsuite).
+2. Open Burp Suite and if not already set up, follow the [🛡️tutorial](/cybersecurity/tools/burpsuite).
 3. Turn on `Intercept` in Burp Suite.
-4. In the HackHealth app, try to log in with valid user and invalid password. <br/>
+4. In the HackHealth app, try to log in with a valid user and invalid password. <br/>
 **email**: samuel.neceda@gmail.com <br/>
 **password**: invalid <br/>
-5. In Burp Suite\`s `HTTP history` tab, last request should be the POST request to the login endpoint.
+5. In Burp Suite\`s `HTTP history` tab, the last request should be the POST request to the login endpoint.
 If not, click `Forward` button in Proxy tab to forward the request to the server.
-6. Right click on it and select `Send to Intruder`.
+6. Right-click on it and select `Send to Intruder`.
 <Image src="/burpSuite/burp_intruder.png" alt="Burp intruder" width={1000} height={300}/>
-According to an image, you can see parameters which are included in the request and response. <br/>
+According to an image, you can see parameters that are included in the request and response. <br/>
 
 7. Message was sent to the `Intruder` tool. In the Intruder tab, you can see the request which was sent to the server.
 8. As you can see, payload positions are marked with green color and $ sign.
-9. We will demonstrate the situation, when the attacker knows the email of the user and tries to guess the password.
+9. We will demonstrate the situation when the attacker knows the email of the user and tries to guess the password.
 10. Remove the $ signs bordering the email value, so the email will be static.
-11. Keep default attack type `Sniper`.
+11. Keep the default attack type `Sniper`.
 12. In the `Payloads` tab, load the values for passwords from `/home/hacker/resources/` in the `Payload Options` section.
 
 <Image src="/burpSuite/burp_list.png" alt="Burp list" width={700} height={300}/>
 
 <Callout emoji="💡">
-    We will be using set of 100 commonly used weak passwords. There are many other sets, which contains huge amount of
+    We will be using a set of 100 commonly used weak passwords. There are many other sets, which contains a huge amount of
     commonly used or leaked usernames and passwords.
-    For usernames, you can use [SecLists](https://github.com/danielmiessler/SecLists) set and for passwords
+    For usernames, you can use [SecLists](https://github.com/danielmiessler/SecLists) set, and for passwords
     [rockyou](https://github.com/josuamarcelc/common-password-list). Kali Linux also provides some password dictionary
     files as part of its standard installation.
 </Callout>
 
 13. Now, we will start the attack. Click `Start Attack` button.
-During the attack, every password from the list will be tried against the email and you can see progress in the Progress bar in the bottom of the window.
-14. After the attack is finished, important information for us are `Status` codes. Also, when clicking on each row with password, we can see in the bottom the request and response of the server. <br />
+During the attack, every password from the list will be tried against the email and you can see progress in the Progress bar at the bottom of the window.
+14. After the attack is finished, important information for us are `Status` codes. Also, when clicking on each row with a password, we can see at the bottom the request and response of the server. <br />
 **Status codes**:
 - **200** - password is correct
 - **401** - password is incorrect
@@ -68,12 +67,12 @@ During the attack, every password from the list will be tried against the email 
 <Image src="/burpSuite/burp_succ.png" alt="Burp success" width={1000} height={300}/>
 
 16. **Attack was successful!** <br />
-In HackHealth app, you can try to log in with obtained password and verify you are able to access the dashboard.
+In the HackHealth app, you can try to log in with obtained password and verify you can access the dashboard.
 
 <Callout emoji="💡">
-    Intruder tool in Burp Suite is not the best tool for brute force attacks, but it is easy to use with good
+    The `Intruder` tool in Burp Suite is not the best tool for brute force attacks, but it is easy to use with good
     documentation and very detailed results.
-    Also, some functionalities are disabled and attacks are time throttled in Community version. Other great tool
+    Also, some functionalities are disabled and attacks are time throttled in the Community version. Another great tool
     serving this purpose is **Hydra**, which is more powerful and is also preinstalled in Kali Linux.
 </Callout>
 
@@ -81,12 +80,12 @@ In HackHealth app, you can try to log in with obtained password and verify you a
 We will implement protection against brute force attacks in the hackHealth app source code using [express-brute](https://www.npmjs.com/package/express-brute) package.
 <Callout type="info" emoji="ℹ️">
     As you will found out in [❕A06: Vulnerable and Outdated components](/cybersecurity/a06/vulPackages), using this package is
-    not the most optimal solution, but as you are aware, process of development is about constant improvements and
+    not the most optimal solution, but as you are aware, the process of development is about constant improvements and
     learning ...
 </Callout>
 
 1. In the `src/server/src/middleware` create a new file called `bruteforcePrevention.ts`
-2. Insert following code into the file:
+2. Insert the following code into the file:
 ```js filename="bruteforcePrevention.ts" copy showLineNumbers
 const expressBrute = require("express-brute");
 
@@ -111,8 +110,8 @@ export default bruteforce;
 
 This code will block the user after 5 failed attempts for 30 seconds and then will be blocked for every failed attempt.
 <Callout emoji="💡">
-    Change displayed message to be more generic and do not include the time when the user will be able to try again.
-    This will make it harder for attackers to predict and plan next attacks on the system.
+    Change the displayed message to be more generic and do not include the time when the user will be able to try again.
+    This will make it harder for attackers to predict and plan the next attacks on the system.
 </Callout>
 
 3. Now, all you need to do is to import the `bruteforce` variable and use it as middleware in the `src/server/src/routes/jwtAuth.ts` file and add it to the `login` route.
@@ -123,8 +122,8 @@ router.post("/login", bruteforce.prevent, inputValidation, async (req, res) => {
 ```
 
 ## Verification
-Try to start an attack again with the same properties as before. In the attack progress, you should see that only first five request were processed and the rest were blocked.
-After 30 seconds, new requests will be processed and so on. We can conclude, that we have successfully implemented simple protection against brute force attacks and we are now ready to move on to the next topic.
+Try to start an attack again with the same properties as before. In the attack progress, you should see that only the first five requests were processed and the rest were blocked.
+After 30 seconds, new requests will be processed, and so on. We can conclude, that we have successfully implemented simple protection against brute force attacks and we are now ready to move on to the next topic.
 
 
 ## Sources

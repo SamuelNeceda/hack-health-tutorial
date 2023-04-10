@@ -18,20 +18,20 @@ SSRF (Server-Side Request Forgery) vulnerabilities arise when a web application 
 
 ## Attack
 <Callout emoji="💡">
-    As an attacker, you are going to try different URLs with the goal of accessing internal resources of the application.
+    As an attacker, you are going to try different URLs to access the internal resources of the application.
 </Callout>
 1. For launching the attack, you are going to use **Burp Suite**, with which you have already familiarized yourself in the previous chapters.
 2. Open Burp Suite and in the designated browser, navigate to the `http://localhost:3001/login`.
 3. Log in with a valid user account.
-4. Right in front you is an input field, which should be used to enter a URL of a patient`s Electronic Health Record (EHR). The application will then fetch the EHR from the URL and display it to the user.
+4. Right in front of you is an input field, which should be used to enter the URL of a patient`s Electronic Health Record (EHR). The application will then fetch the EHR from the URL and display it to the user.
 5. In the input field, enter the following URL: `https://www.hack-health.tech/`.
 6. In Burp Suite `HTTP history`, you can see that the web server has sent a request to the URL you entered and received a response.
 <Image src="/a10/ssrf1.png" alt="nth-check package" width={1000} height={300}/>
 <Callout type="info" emoji="ℹ️">
-    POST request with user-provided URL was sent to a `/url` route on a web server.
-    When you navigate to the definiton of `/url` route in the source code, you can see that axios library is used to send a GET request to the provided URL, and returns the response data to the client.
+    POST request with a user-provided URL was sent to a `/url` route on a web server.
+    When you navigate to the definition of `/url` route in the source code, you can see that the axios library is used to send a GET request to the provided URL and returns the response data to the client.
 </Callout>
-7. Right click on the request and send the request to Repeater.
+7. Right-click on the request and send the request to Repeater.
 8. In the Repeater, change the URL to `http://localhost:5000/health` and send the request.
 <Image src="/a10/ssrf2.png" alt="nth-check package" width={1000} height={300}/>
 <Callout emoji="💡">
@@ -52,7 +52,7 @@ const approvedDomains = [
     "https://www.healthit.gov"
 ];
 ```
-2. Before making a request to the URL, check if the URL is in the whitelist.
+2. Before requesting the URL, check if the URL is in the whitelist.
 ```js filename="externalSource.ts" copy showLineNumbers
 // Check if the requested URL is in the list of approved domains
 const isApproved = approvedDomains.some(domain => url.startsWith(domain));
@@ -101,10 +101,10 @@ module.exports = router;
 3. Submit the URL.
 4. In the console, you should see the following error:
 <Image src="/a10/devTools.png" alt="nth-check package" width={1000} height={300}/>
-5. In the same way, you can try other requests used for attack, everytime you should see the same error and failure to fetch the data.
-6. Try to enter a valid URL, for example `https://www.healthit.gov/faq/what-electronic-health-record-ehr`. The application should fetch the data from the URL and display them in the console.
+5. In the same way, you can try other requests used for attack, every time you should see the same error and failure to fetch the data.
+6. Try to enter a valid URL, for example, `https://www.healthit.gov/faq/what-electronic-health-record-ehr`. The application should fetch the data from the URL and display them in the console.
 <Callout emoji="💡">
-    We have successfully implemented prevention from SSRF attacks. Now, the application will only allow requests to the domains defined in the whitelist and any other internal or external URL will be rejected.
+    We have successfully implemented prevention from SSRF attacks. Now, the application will only allow requests to the domains defined in the whitelist, and any other internal or external URL will be rejected.
 </Callout>
 
 ## Sources

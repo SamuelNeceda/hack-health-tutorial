@@ -13,7 +13,7 @@ For the information about **Identification and Authentication Failures**, visit 
 </Callout>
 
 ## About
-Securing the sensitive data or credentials like:
+Securing sensitive data or credentials like:
 * API credentials
 * Session Secret Key
 * DB Connection Credentials
@@ -21,7 +21,7 @@ Securing the sensitive data or credentials like:
 is a very important task for any application. If the credentials are not secured properly, then the attacker can easily access the sensitive data and misuse them.
 
 <Callout type="info" emoji="ℹ️">
-    One common way how to handle this is by using **environment variables**. Environment variables are present outside the application and reside in the Operating System or container of the application where the application is deployed. Beside storing the sensitive information, they have the ability to provide different configuration for different environments (dev, stage, prod, etc.)
+    One common way how to handle this is by using **environment variables**. Environment variables are present outside the application and reside in the Operating System or container of the application where the application is deployed. Besides storing sensitive information, they can provide different configurations for different environments (dev, stage, prod, etc.)
 </Callout>
 
 ## Demo
@@ -29,9 +29,9 @@ is a very important task for any application. If the credentials are not secured
 ```bash copy
 snyk code test
 ```
-Among the results, you should see also medium severity vulnerability: `Use of Hardcoded Credentials`.
+Among the results, you should see also a medium severity vulnerability: `Use of Hardcoded Credentials`.
 
-2. We will move all hardcoded credential into `.env` file as environment variables.
+2. We will move all hardcoded credentials into `.env` file as environment variables.
 3. In the `src/server/.env`, insert the following:
  ```bash filename=".env" copy showLineNumbers
 # Database configuration
@@ -42,7 +42,7 @@ DB_PASSWORD=postgres
 DB_NAME=hackhealthdb
 ```
 
-4. In following files, replace the hardcoded credentials with environment variables: <br />
+4. In the following files, replace the hardcoded credentials with environment variables: <br />
 **Files:**
     * dbCreate.ts
     * dbDrop.ts
@@ -50,7 +50,7 @@ DB_NAME=hackhealthdb
     * dbServer.ts
 
 <Callout emoji="💡">
-    To read the environment variable from .env file, we are using parser from `dotenv` package. It loads the environment variables from the .env file into the process.env object. We can access any environment variable using process.env.[ENV_VARIABLE_NAME].
+    To read the environment variable from .env file, we are using a parser from `dotenv` package. It loads the environment variables from the .env file into the process.env object. We can access any environment variable using process.env.[ENV_VARIABLE_NAME].
 </Callout>
 
 **Example for dbDrop.ts:**
@@ -78,10 +78,10 @@ Credentials should never be hard-coded in the application. One of the practices 
 * Use of a key management system
 * Use of a password vault
 
-In real world applications, it is recommended to use methods mentioned above above rather than environment-variables.
+In real-world applications, it is recommended to use the methods mentioned above rather than environment variables.
 
 <Callout emoji="💡">
-    When using environment variables, `.env` file should be added to `.gitignore` file to prevent it from being committed to the repository. We will not do it in this demo, because you are working with your own local copy of the repository.
+    When using environment variables, `.env` file should be added to `.gitignore` file to prevent it from being committed to the repository. We will not do it in this demo, because you are working with your local copy of the repository.
 </Callout>
 
 ## Sources

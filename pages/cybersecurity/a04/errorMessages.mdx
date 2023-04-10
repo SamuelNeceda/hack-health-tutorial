@@ -13,7 +13,7 @@ For the information about **Insecure Design**, visit [page](https://owasp.org/To
 </Callout>
 
 ## About 
-One of the most common, and on the other hand easily prevented vulnerability related to Insecure design is the generation of error messages containing sensitive information. This vulnerability is related to the fact that the application generates error messages that contain some kind of information, which can be used as a hint for an attacker to execute a more serious attack. It can have many forms and severities, we will demonstrate one of them in this example.
+One of the most common, and on the other hand easily prevented vulnerabilities related to Insecure design is the generation of error messages containing sensitive information. This vulnerability is related to the fact that the application generates error messages that contain some kind of information, which can be used as a hint for an attacker to execute a more serious attack. It can have many forms and severities, we will demonstrate one of them in this example.
 
 ## Demo
 In the login screen of the web app, enter the valid username and invalid password. What message is displayed?
@@ -27,11 +27,11 @@ Now, enter the invalid username and valid/invalid password. The message being di
 Invalid username.
 ```
 
-Both error messages indicate whether an user exists or not. Tt relates to a weakness in the authentication mechanism where an attacker can obtain information about the validity of the username or password by observing the system's response to invalid login attempts.
+Both error messages indicate whether a user exists or not. It relates to a weakness in the authentication mechanism where an attacker can obtain information about the validity of the username or password by observing the system's response to invalid login attempts.
 Therefore, it's essential to provide generic error messages to users when authentication fails to prevent such attacks.
 
 ## Prevention
-In the source code, navigate to the file `jwtAuth.ts` and based on displayed error messages, change the error messages to generic ones.
+In the source code, navigate to the file `jwtAuth.ts` and based on the displayed error messages, change the error messages to generic ones.
 
 ## Sources
 * https://owasp.org/Top10/A04_2021-Insecure_Design/

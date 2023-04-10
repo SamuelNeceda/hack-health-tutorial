@@ -16,16 +16,16 @@ For the information about **Vulnerable and Outdated Components**, visit [page](h
 
 ## About 
 We will use Snyk static tool analysis to detect packages with known vulnerabilities. If the fix is provided in another version
-of the package, we will update the package version. In the case the package is not maintained or the vulnerability cannot be fixed just by updating the package, we will look for and implement proper solution.
+of the package, we will update the package version. In the case, the package is not maintained or the vulnerability cannot be fixed just by updating the package, we will look for and implement a proper solution.
 
 <Callout type="info" emoji="ℹ️">
-    Vulnerable packages were detected at the time of preparing this part of the tutorial (19.3.2022). In the future, more vulnerabilites will be
+    Vulnerable packages were detected at the time of preparing this part of the tutorial (19.3.2022). In the future, more vulnerabilities will be
     detected in used packages, which only highlights the importance of regular scanning of your project.
 </Callout>
 
 <Callout emoji="💡">
     You will often encounter packages that are introduced by other packages. If the parent package does not provide
-    updated version with fixed child package, you have to track down the child package and change version manually.
+    an updated version with a fixed child package, you have to track down the child package and change the version manually.
 </Callout>
 
 ## Client side
@@ -47,14 +47,14 @@ Luckily, the fix is provided for both of them.
 
 ### webpack package
 
-Try to resolve this vulnerability by yourself. Just follow the same steps as for `nth-check` package, but update version of `webpack` from 5.75.0 to 5.76.0.
+Try to resolve this vulnerability by yourself. Just follow the same steps as for `nth-check` package, but update the version of `webpack` from 5.75.0 to 5.76.0.
 
 ## Server side
 Navigate to the server directory and run:
 ```bash copy
 snyk test
 ```
-There are two packages with known vulnerability: `underscore` and `express-brute`.
+There are two packages with known vulnerabilities: `underscore` and `express-brute`.
 We will start with `underscore`.
 
 ### underscore package
@@ -67,29 +67,29 @@ We will start with `underscore`.
 </Callout>
 
 ### express-brute package
-Second vulnerability in a server side is identified as `express-brute`. This package is used to prevent brute force attacks.
+The second vulnerability on the server side is identified as `express-brute`. This package is used to prevent brute-force attacks.
 All versions of `express-brute` are vulnerable to **Rate Limiting Bypass** vulnerability.
 
 #### Rate Limiting Bypass
-Rate limiting bypass is a type of attack that allows an attacker to bypass rate limiting protection if not implemented properly. It can be circumvented by using:
+Rate-limiting bypass is a type of attack that allows an attacker to bypass rate-limiting protection if not implemented properly. It can be circumvented by using:
 * proxy server
-* IP address spoofing (IP roration)
+* IP address spoofing (IP rotation)
 * using specific headers in a request
 * appending "null byte" to the end of targeted fields
 
 <Callout emoji="💡">
-    Alternative package for `express-brute` is `express-rate-limit`. It is more popular and has no known
+    The alternative package for `express-brute` is `express-rate-limit`. It is more popular and has no known
     vulnerabilities.
     In this tutorial, we will not replace the implementation of middleware, but you can try it yourself and verify if
     the replacement works as expected without any vulnerabilities.
 </Callout>
 
 ## Which package to use?
-You may be asking, how to determine which package to use to perform specific tasks. Yeah, sometimes you are happy that the particular package even exists and you do not have to code it yourself and that you find it quickly.
+You may be asking, how to determine which package to use to perform specific tasks. Yeah, sometimes you are happy that the particular package even exists that you do not have to code it yourself, and that you find it quickly.
 But, when you want to make your software product secure and reliable, make sure to follow the checklist below:
 
 <Callout emoji="💡">
-    You can pick any of your personal/school project and try to apply the checklist below. If the check is fulfilled, you can **mark it as done** by clicking the checkbox on the left of the description.
+    You can pick any of your personal/school projects and try to apply the checklist below. If the check is fulfilled, you can **mark it as done** by clicking the checkbox on the left of the description.
 </Callout>
 
 <br />
@@ -108,7 +108,7 @@ Now, we will illustratively compare `express-brute` and `express-rate-limit` pac
 ## Challenge
 As mentioned in the beginning, more vulnerable packages and their versions will be detected by the time of practicing this tutorial.
 <Callout emoji="💡">
-    As you personal challenge, based on the acquired knowledge, try to fix as many vulnerabilities as possible.
+    As your personal challenge, based on the acquired knowledge, try to fix as many vulnerabilities as possible.
 </Callout>
 
 ## Sources
