@@ -1,0 +1,323 @@
+import {Callout} from 'nextra-theme-docs'
+import Image from 'next/image'
+
+## Intro
+Check out to the branch called `0_init`. <br />
+This branch only contains separate folders to divide the logic and implementation for the client and server. It already contains the `.gitignore` file and README.md files, so you do not have to worry about it.
+
+## Initialization of server side
+Navigate to the `server` folder in the terminal. <br />
+Run the following command to initialize the server side.
+```bash copy
+npm init -y
+```
+<Callout type="info" emoji="ℹ️">
+This will create a default `package.json` file in the `server` folder. It contains the basic metadata for the project, such as its name, version, description, scripts and dependencies.
+</Callout>
+To meet our needs, we need to modify the `package.json` file. <br />
+Replace the content of the file with the following code:
+```json filename="package.json" copy showLineNumbers
+{
+  "name": "hack-health",
+  "version": "1.0.0",
+  "description": "Deliberately vulnerable web app for educational purposes",
+  "main": "../../dist/index.js",
+
+  "author": "Samuel Neceda",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SamuelNeceda/hackHealth/issues"
+  },
+  "homepage": "https://github.com/SamuelNeceda/hackHealth#readme",
+  "scripts": {
+    "dev": "nodemon src/index.ts",
+    "dev-types": "concurrently \"tsc -w\" \"nodemon index.ts\"",
+    "build": "tsc -p tsconfig.json",
+    "db-create": "node src/database-scripts/dbCreate.ts",
+    "db-seed": "node src/database-scripts/dbSeed.ts",
+    "db-drop": "node src/database-scripts/dbDrop.ts",
+    "lint": "eslint ../.. --ext .js,.ts",
+    "lint-fix": "npm run lint -- --fix"
+  },
+  "dependencies": {
+    "axios": "^1.3.4",
+    "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.1",
+    "concurrency": "^0.1.4",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-brute": "^1.0.1",
+    "helmet": "^6.0.1",
+    "jsonwebtoken": "^9.0.0",
+    "pg": "^8.9.0",
+    "rimraf": "^4.1.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5",
+    "winston": "^3.8.2",
+    "winston-daily-rotate-file": "^4.7.1"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.2",
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.13.0",
+    "@typescript-eslint/eslint-plugin": "^5.51.0",
+    "@typescript-eslint/parser": "^5.51.0",
+    "concurrently": "^7.6.0",
+    "eslint": "^8.33.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "nodemon": "^2.0.20",
+    "prettier": "^2.8.4"
+  }
+}
+```
+* For your convenience, it already contains all the dependencies you should need during development and also scripts. In case you will need some other packages, you can just install them
+* Now, run `npm i` in the terminal, this command will install all the dependencies and also creates a `node_modules` folder, along with a `package-lock.json` file.
+* Now, we are going to create a new file called `tsconfig.json` in the `server` folder. 
+* Paste the following to it:
+```json filename="tsconfig.json" copy showLineNumbers
+{
+  "compilerOptions": {
+    // Specifies the library files to include during compilation
+    "lib": ["es6"],
+    
+    // Specifies the module system to use
+    "module": "commonjs",
+    
+    // Specifies the ECMAScript version to target
+    "target": "ES2020",
+    
+    // Specifies whether to generate source maps for debugging
+    "sourceMap": true,
+    
+    // Specifies the output directory for the compiled code
+    "outDir": "dist",
+    
+    // Specifies the syntax to use for React components
+    "jsx": "react",
+    
+    // Specifies whether to allow default imports from CommonJS modules with ESModule interop
+    "esModuleInterop": true
+  },
+  
+  // Specifies the file patterns to include in the compilation process
+  "include": [
+    "./**/*.ts"
+  ],
+  
+  // Specifies the file patterns to exclude from the compilation process
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
+```
+<Callout emoji="💡">
+The comments should help you to understand individual options.
+</Callout>
+
+## Database scripts
+* Now, when we have a basic structure, create a new folder called `src` and inside it, create a new folder called `database-scripts`. <br />
+This folder will contain all the scripts needed to create, seed and drop the database. We are not going to dig deeper into them, so just create the three files and paste the code inside them.
+```js filename="dbCreate.ts" copy showLineNumbers
+const dotenv = require('dotenv');
+const { Client } = require('pg');
+
+dotenv.config();
+
+const client1 = new Client({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD
+});
+
+client1.connect();
+
+const createDbSQL = `CREATE DATABASE hackhealthdb;`;
+
+client1.query(createDbSQL, (err) => {
+    if (err) {
+        console.error(err);
+    } else {
+        console.log("Database created successfully");
+    }
+    client1.end();
+});
+```
+
+```js filename="dbSeed.ts" copy showLineNumbers
+const {Client} = require('pg');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
+const client2 = new Client({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+});
+
+client2.connect();
+
+const createTableUserAccount = `
+    CREATE TABLE useraccount
+    (
+        userid      SERIAL,
+        email       VARCHAR(50)  NOT NULL,
+        password    VARCHAR(255) NOT NULL,
+        firstname   VARCHAR(30)  NOT NULL,
+        lastname    VARCHAR(30)  NOT NULL,
+        title       VARCHAR(15) DEFAULT '-',
+        birthdate   DATE         NOT NULL,
+        phone       VARCHAR(24)  NOT NULL,
+        sex         CHAR(1)     DEFAULT 'M' CHECK ( sex = 'M' OR sex = 'F' ),
+        status      VARCHAR(10) DEFAULT 'patient',
+        birthnumber VARCHAR(11)  NOT NULL,
+        PRIMARY KEY (userid)
+    );
+`;
+
+
+const createTableAppointment = `
+    CREATE TABLE appointment
+    (
+        userid SERIAL,
+        date   DATE        NOT NULL,
+        time   TIME        NOT NULL,
+        notes  VARCHAR(200),
+        status VARCHAR(10) NOT NULL,
+        FOREIGN KEY (userid) REFERENCES useraccount (userid) ON DELETE CASCADE
+    );
+`;
+
+const createTableMedicalReport = `
+    CREATE TABLE medicalreport
+    (
+        userid         SERIAL,
+        medicalhistory JSON,
+        vitalsigns     JSON,
+        medications    JSON,
+        files          JSON,
+        notes          VARCHAR(200),
+        FOREIGN KEY (userid) REFERENCES useraccount (userid) ON DELETE CASCADE
+    );
+`;
+
+const insertUserAccount1 = `
+    INSERT INTO useraccount (email, password, firstname, lastname, birthdate, phone, sex, status, birthnumber)
+    VALUES ('admin@hackhealth.com', 'password', 'admin', 'admin', '2000-01-01', '+421915123456', 'M', 'admin', '123456/8429');
+`;
+const insertUserAccount2 = `
+    INSERT INTO useraccount (email, password, firstname, lastname, title, birthdate, phone, sex, status, birthnumber)
+    VALUES ('jane.smith@hackhealth.com', 'MyStrongPassword123', 'Jane', 'Smith', 'Mudr.', '1990-01-01', '+421905524887', 'F', 'doctor', '900101/1234');
+`;
+const insertUserAccount3 = `
+    INSERT INTO useraccount (email, password, firstname, lastname, birthdate, phone, sex, status, birthnumber)
+    VALUES ('samuel.neceda@gmail.com', 'secret', 'Samuel', 'Neceda', '2001-06-28', '+421905479874', 'M', 'patient', '573224/6614');
+`;
+
+const insertMedicalReport = `
+    INSERT INTO medicalreport (userid, medicalhistory, vitalsigns, medications, files, notes)
+    VALUES ((SELECT userid FROM useraccount WHERE birthnumber = '573224/6614'), '{
+  "illnesses": "none",
+  "chronicConditions": "none",
+  "allergies": "dust",
+  "surgeries": "appendix"
+}', '{
+  "height": "1.89",
+  "weight": "80",
+  "bloodPressure": "120/80",
+  "heartRate": "60",
+  "temperature": "36.5"
+}', '{
+  "medicationName": "Vitamin C",
+  "dosage": "1",
+  "frequency": "1"
+}', NULL, NULL);
+`;
+const insertAppointment = `
+    INSERT INTO appointment (userid, date, time, notes, status)
+    VALUES ((SELECT userid FROM useraccount WHERE birthnumber = '573224/6614'), '2023-08-15', '10:00:00', NULL, 'active');
+`;
+
+async function runQueries() {
+    await client2.query(createTableUserAccount);
+    await client2.query(createTableAppointment);
+    await client2.query(createTableMedicalReport);
+    console.log("Tables created successfully");
+    await client2.query(insertUserAccount1);
+    await client2.query(insertUserAccount2);
+    await client2.query(insertUserAccount3);
+    await client2.query(insertMedicalReport);
+    await client2.query(insertAppointment);
+    console.log("Data inserted successfully");
+    client2.end();
+}
+
+runQueries()
+    .then(() => {
+        client2.end();
+    })
+    .catch((err) => {
+        console.error("Error while executing queries: ", err);
+        client2.end();
+    });
+```
+
+```js filename="dbDrop.ts" copy showLineNumbers
+const dotenv = require('dotenv');
+const { Client } = require('pg');
+
+dotenv.config();
+
+const client = new Client({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD
+});
+
+client.connect();
+
+const dropDbSQL = `DROP DATABASE hackhealthdb;`;
+const terminateConnectionsSQL = `SELECT pg_terminate_backend(pg_stat_activity.pid)
+                                 FROM pg_stat_activity
+                                 WHERE pg_stat_activity.datname = 'hackhealthdb';
+`;
+
+client.query(terminateConnectionsSQL, (err) => {
+    if (err) {
+        console.error(err);
+    } else {
+        console.log("Active connections terminated successfully");
+    }
+});
+
+client.query(dropDbSQL, (err) => {
+    if (err) {
+        console.error(err);
+    } else {
+        console.log("Database dropped successfully");
+    }
+    client.end();
+});
+```
+
+* Also, create a file called .env in the server directory, to store the environment variables. The file should look like this:
+```js filename=".env" copy showLineNumbers
+# Database configuration
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=hackhealthdb
+```
+
+## Summary
+Congratulations, you have successfully created a basic structure of a Node.js application with a scipts for creating a PostgreSQL database and tables. In the next chapter, we will create an Express server and initialize the database connection.
+

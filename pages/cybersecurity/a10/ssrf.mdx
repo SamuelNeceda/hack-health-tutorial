@@ -107,6 +107,10 @@ module.exports = router;
     We have successfully implemented prevention from SSRF attacks. Now, the application will only allow requests to the domains defined in the whitelist, and any other internal or external URL will be rejected.
 </Callout>
 
+<Callout type="info" emoji="ℹ️">
+In this tutorial, we have only covered register endpoint, but in the next chapter, branch will already contain multiple other endpoints. The logic for creating them is almost the same. In the following chapters, we will also adjust the implementation to use middleware and jwt authentication.
+</Callout>
+
 ## Sources
 * https://sethsec.blogspot.com/2015/12/exploiting-server-side-request-forgery.html
 * https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery_%28SSRF%29/

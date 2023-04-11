@@ -1,0 +1,170 @@
+import {Callout} from 'nextra-theme-docs'
+import Image from 'next/image'
+
+## Intro
+In case of need, check out to the branch called `2_routes`. This branch have already implemented the code for server.
+
+## Register route
+1. Create a new folder called `routes` in the same level as `database-scripts` folder.
+2. Inside the `routes` folder, create a new file called `jwtAuth.ts`.
+3. In the `index.ts` file, add the following code after `// ROUTES`:
+```js filename="index.ts" copy showLineNumbers
+// ROUTES
+app.use("/auth", require("./routes/jwtAuth"));
+```
+It means that if you hit the `/auth` route, it will go to the `jwtAuth.ts` file. <br />
+<Callout type="info" emoji="ℹ️">
+Now, we are going to build the register route step by step and the whole code will be presented at the end of this section. The basic idea is that in the final app, the user will enter the values to the form and the form will be send in the POST request to the `/register` endpoint in JSON format. Then, it will evaluated and if everything is ok, the user will be inserted into the database and authorised.
+</Callout>
+
+When the JSON from the client side is received, we need to destructure it and get the values from the request body. <br />
+```js filename="index.ts" copy showLineNumbers
+import {Router} from "express";
+
+const router = Router();
+// Define the register endpoint route and associated handler function
+router.post("/register", async (req, res) => {
+
+    // Destructure the req.body object to get user input values
+    const {
+        email,
+        password,
+        firstname,
+        lastname,
+        title,
+        birthdate,
+        phone,
+        sex,
+        status,
+        birthnumber,
+    } = req.body;
+}
+
+module.exports = router;
+```
+
+Then, in the highlighted try-catch block, we are going to query the database to check if the user already has a record in the database. <br />
+If the user is already registered, we will send an error message.
+
+
+```js filename="index.ts" copy showLineNumbers {22-31}
+import {Router} from "express";
+import pool from "../dbServer";
+
+const router = Router();
+
+// REGISTER
+router.post("/register", async (req, res) => {
+    const {
+        email,
+        password,
+        firstname,
+        lastname,
+        title,
+        birthdate,
+        phone,
+        sex,
+        status,
+        birthnumber,
+    } = req.body;
+
+    try {
+        const user = await pool.query(
+            "SELECT * FROM useraccount WHERE email = $1",
+            [email]
+        );
+
+        if (user.rows.length) {
+            return res.status(401).json("User is already registered.");
+        }
+    }
+});
+
+module.exports = router;
+```
+
+In the next and **final section**, we are going to insert user into the database, return the response or throw an error when something during an execution goes wrong.
+
+```js filename="index.ts" copy showLineNumbers {32-55}
+import {Router} from "express";
+import pool from "../dbServer";
+
+const router = Router();
+
+// REGISTER
+router.post("/register", async (req, res) => {
+    const {
+        email,
+        password,
+        firstname,
+        lastname,
+        title,
+        birthdate,
+        phone,
+        sex,
+        status,
+        birthnumber,
+    } = req.body;
+
+    try {
+        const user = await pool.query(
+            "SELECT * FROM useraccount WHERE email = $1",
+            [email]
+        );
+
+        if (user.rows.length) {
+            return res.status(401).json("User is already registered.");
+        }
+
+        const insertStatus = status ?? "patient"
+        let uniqueUser = await pool.query(
+            "INSERT INTO useraccount (email, password, firstname, lastname, title, birthdate, phone, sex, status, birthnumber) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *",
+            [
+                email,
+                password,
+                firstname,
+                lastname,
+                title,
+                birthdate,
+                phone,
+                sex,
+                insertStatus,
+                birthnumber,
+            ]
+        );
+
+        res.json({
+            success: true,
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server error");
+    }
+});
+
+module.exports = router;
+```
+
+### Connection to database 
+When we want to make queries to the database, we also need to define the logic in the `dbServer.ts` file located in the same hierarchy as `index.ts` file
+```js filename="dbServer.ts" copy
+// Configure connection to database
+
+import {Pool} from 'pg';
+
+
+const pool = new Pool({
+    host: "localhost",
+    port: 5432,
+    user: "postgres",
+    password: "postgres",
+    database: "hackhealthdb",
+})
+
+export default pool;
+```
+
+<Callout emoji="💡">
+    Now, start the server by running `npm run dev` and open Postman by running `Postman` in the terminal of the virtual machine. You can try predifined request to `register` endpoint. <br />
+    As a result, you should get status code **200** and **"success": true**
+</Callout>

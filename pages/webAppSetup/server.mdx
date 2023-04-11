@@ -1,14 +1,111 @@
 import {Callout} from 'nextra-theme-docs'
+import Image from 'next/image'
 
-# Server
+## Intro
+In case you have worries that you might not implement everything correctly from the last lecture, you can check out to the branch called `1_server`. If you are goof with your implementation, there is no need to check out to this branch. <br />
+<Callout type="info" emoji="ℹ️">
+This approach also applies to all the other lectures. You can either check out to the branch where you have all previously implemented code ready for you, or you can keep up working in the same branch.
+</Callout>
+
+**The project structure should look like this:**
+<Image src="/webApp/1_structure.png" alt="Project structure" width={300} height={300}/>
+
+## Server
+For your app, we are going to use Express.js server, which is a minimal and flexible Node.js web application framework. <br />
+1. In the server\`s src folder, create a file called `index.ts`.
+2. Paste the following code to the file:
+```js filename="index.ts" copy showLineNumbers
+// Importing necessary modules
+import express, {Application} from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+
+// Loading environment variables from .env file
+dotenv.config();
+
+// Creating an instance of the express application
+const app: Application = express();
+
+// Defining a default port for the server to listen to
+const PORT = process.env.PORT || 5000;
+
+// MIDDLEWARE
+app.use(cors()); // Allow Cross-Origin Resource Sharing
+app.use(express.json()); // Parse incoming request body as JSON
+app.use(express.urlencoded({extended: true})); // Parse incoming request body as URL-encoded data
+
+// ROUTES
+
+// Starting the server and listening for incoming requests on the defined port
+try {
+    app.listen(PORT, (): void => {
+        console.info(`Server is successfully running on port ${PORT}`);
+    });
+} catch (error) {
+    console.error(`Error occurred: ${error.message}`);
+}
+```
+Go through individual lines of code and try to understand their purpose. <br />
+
+3. In the line 13, we are defining a default port for the server to listen to in case the environment variable `PORT` is not defined. <br />
+We need to define the port in the environment variable file. <br />
+Edit the `.env` file and add the following lines:
+```bash copy
+# Server configuration
+PORT=5000
+```
+
+4. In the `package.json` file, find the command which starts the server.
 
 <Callout emoji="💡">
-    If you encounter the issue when starting the server or client side of the application saying: "Port *portNumber* is
-    already in use", run the following commands in the terminal:
-    ```bash copy
-    sudo netstat -tulpn | grep *portNumber*
-    sudo kill *PID*
-    ```
-    Replace the *portNumber* with the port number you are trying to use and *PID* with the process ID obtained from the
-    first command.
+After running the command `npm run dev`, the server should start and you should see the message `Server is successfully running on port 5000` in the terminal. Also, the server is run using nodemon, which means that the server will restart automatically after any changes in the code.
 </Callout>
+
+## Database
+
+For the database, we are using PostgreSQL. <br />
+The database server is already running on the VM, so we are just going to create the database and seed it with some data. <br />
+<br />
+**Before running following commands, terminate (CTRL + C) the running server in the terminal.** <br />
+
+### Create a database
+
+In the terminal, run the following command:
+
+```bash copy
+npm run db-create
+```
+
+### Create tables and insert data
+
+Run the following command:
+
+```bash copy
+npm run db-seed
+```
+
+### Drop database
+
+If you corrupt the database and data in it during exposing the vulnerabilities, you can drop the database and create it
+again.
+Run the following command:
+
+```bash copy
+npm run db-drop
+```
+
+To recreate the database, tables, and records, run `npm run db-create` and `npm run db-seed` commands.
+
+### [Optional] Interact with the database
+
+<Callout emoji="💡">
+    1. To interact with the PostgreSQL database server, you can use `psql` CLI.
+    * You can type SQL commands to interact with the database, and it also provides meta-commands to interact with the
+    server.
+    2. Second option is to use preinstalled GUI tool called DBeaver, but we strongly recommend using `psql` CLI.
+    A tutorial for these two tools is not part of this tutorial, but there are many available online.
+</Callout>
+
+## Summary
+By following the tutorial, you should have an Express server running on port 5000 and database with seeded data. Lets move to the next section!
+
