@@ -1,0 +1,178 @@
+import {Callout} from 'nextra-theme-docs'
+import Image from 'next/image'
+
+## Intro
+In case of need, check out to the branch called `3_jwtGenerator`. This branch have already implemented handling of register, login and dashboard routes. You can use it as a reference.
+
+## About JWT
+JSON Web Token (JWT) is a standard for securely transmitting information between parties as a JSON object. It is often used in web applications as a means of representing claims securely between two parties. <br />
+
+### JWT structure
+JWT is composed of three parts:
+* **Header** - contains information about the type of token and the signing algorithm used
+* **Payload** - contains the claims or information that are being transmitted. These claims can include information such as a user's ID or email address
+* **Signature** - is used to verify the sender of the JWT
+If you want to learn more about JWT, visit its [official website](https://jwt.io/#debugger-io).
+
+### General idea
+When a user logs into an application, a JWT is generated on the server and sent back to the client. The client then stores the token and includes it in all subsequent requests to the server. The server can then use the token to verify the identity of the user and ensure that they are authorized to access the requested resources.
+
+<Callout emoji="💡">
+    That is exactly what we are going to do. In our application, user will be authenticated by a token that is sent with every request. The token is signed with a secret key that is only known to the server and is stored in the local storage.
+</Callout>
+
+## JWT Generator
+### Password
+Firstly, we need to define a password that will be used to sign the token. We will use the `JWT_SECRET` environment variable for that. <br />
+Paste the following code in the `.env` file:
+```bash
+# Authentication configuration
+JWT_SECRET=VeryWeakSecret123-
+```
+<Callout emoji="💡">
+    You can use any password you want. However, it is recommended to use a strong password to enhance the security of your application.
+</Callout>
+
+### Token generation
+Now, we need to generate a token. We will use the `jsonwebtoken` package for that. The package is already installed. <br />
+In the same structure as the `routes` directory, create a new directory called `utils`. In this directory, create a new file called `jwtGenerator.ts` and paste a following code to it:
+```js filename="jwtGenerator.ts" copy showLineNumbers
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
+
+function jwtGenerator(userPassword) {
+  const payload = {
+    user: {
+      password: userPassword,
+    },
+  };
+  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
+}
+
+export default jwtGenerator;
+```
+The function takes a user password as an argument and returns a token. The token is signed with the `JWT_SECRET` environment variable. <br />
+
+## Apply the authentication
+In the `routes -> jwtAuth.ts` file, import the `jwtGenerator` function like this:
+```js filename="jwtAuth.ts" copy showLineNumbers
+import generateJWT from "../utils/jwtGenerator";
+```
+
+Then, in the register route, modify the code with the highlighted lines:
+```js filename="jwtAuth.ts" copy showLineNumbers {43-48}
+// REGISTER
+router.post("/register", async (req, res) => {
+    const {
+        email,
+        password,
+        firstname,
+        lastname,
+        title,
+        birthdate,
+        phone,
+        sex,
+        status,
+        birthnumber,
+    } = req.body;
+
+    try {
+        const user = await pool.query(
+            "SELECT * FROM useraccount WHERE email = $1",
+            [email]
+        );
+
+        if (user.rows.length) {
+            return res.status(401).json("User is already registered.");
+        }
+
+        const insertStatus = status ?? "patient"
+        let uniqueUser = await pool.query(
+            "INSERT INTO useraccount (email, password, firstname, lastname, title, birthdate, phone, sex, status, birthnumber) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *",
+            [
+                email,
+                password,
+                firstname,
+                lastname,
+                title,
+                birthdate,
+                phone,
+                sex,
+                insertStatus,
+                birthnumber,
+            ]
+        );
+
+        const token = generateJWT(uniqueUser.rows[0].password)
+        res.json({
+            success: true,
+            message: "Authentication successful!",
+            token: token,
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server error");
+    }
+});
+```
+In this modification, jwt token will be generated based on user`s password and it will be present in the response.
+
+<Callout emoji="💡">
+    Make exactly the same modification in the login route, so now it will include also generated jwt token in the response.
+</Callout>
+
+## Encryption of passwords
+As you might noticed, currently we store passwords just as plain text. Now, we are going to implement better solution (but keep in mind, better does not mean the best)
+1. In the `jwtAuth.ts` file, import:
+```bash
+import bcrypt from "bcrypt";
+```
+2. Make the adjustments in the register route according to the highlighted lines:
+```js filename="jwtAuth.ts" copy showLineNumbers {5-6, 13}
+    if (user.rows.length) {
+        return res.status(401).json("User is already registered.");
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const bcryptPassword = await bcrypt.hash(password, salt);
+
+    const insertStatus = status ?? "patient"
+    let uniqueUser = await pool.query(
+        "INSERT INTO useraccount (email, password, firstname, lastname, title, birthdate, phone, sex, status, birthnumber) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *",
+        [
+            email,
+            bcryptPassword,
+            firstname,
+            lastname,
+            title,
+            birthdate,
+            phone,
+            sex,
+            insertStatus,
+            birthnumber,
+        ]
+    );
+```
+<Callout emoji="💡">
+     * The user's password is encrypted using the Bcrypt password-hashing function before it is stored in the database. <br />
+     * First, a salt value is generated using the bcrypt.genSalt() function. The salt is a randomly generated string that is added to the password before it is hashed, making it more difficult to crack the password hash. The 10 parameter passed to the function specifies the number of rounds of hashing to apply. <br />
+     * Next, the password is hashed using the bcrypt.hash() function, which takes the plain-text password and the salt value as input parameters. The resulting hash value is then stored in the useraccount table in the database, instead of the plain-text password.
+</Callout>
+
+## Decryption of passwords
+When the user`s password is stored in the database in an encrypted, we need to compare it with the plaintext password entered when logging in. <br />
+Replace one line of assigning value to `const validPassword` in the login route handling as:
+```js filename="jwtAuth.ts" copy showLineNumbers
+const validPassword = await bcrypt.compare(password, user.rows[0].password);
+```
+<Callout type="info" emoji="ℹ️">
+The bcrypt.compare() function takes two parameters: the plain-text password entered by the user and the hashed password retrieved from the database. It then compares the two values and returns true if they match, indicating that the password is valid, or false if they do not match, indicating that the password is invalid.
+</Callout>
+
+<Callout type="warning" emoji="⚠️">
+    Be aware that after changes in the login route, already registered users will not be able to log in. You need to register new users, so you will be able to test the login flow again.
+</Callout>
+
+## Summary
+In this tutorial, you learned how to implement authentication using jwt token. You also learned how to encrypt and decrypt passwords. In the next lecture, we will implement middleware to make sure that only authenticated users can access the private (protected) routes.

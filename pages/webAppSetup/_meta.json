@@ -2,5 +2,7 @@
   "intro": "Introduction",
   "init": "0 Init",
   "server": "1. Server",
-  "routes": "2. Routes"
+  "routes": "2. Routes",
+  "jwtGenerator": "3. JWT Generator",
+  "middleware": "4. Middleware"
 }

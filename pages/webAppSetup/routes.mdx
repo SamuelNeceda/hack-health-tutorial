@@ -168,3 +168,90 @@ export default pool;
     Now, start the server by running `npm run dev` and open Postman by running `Postman` in the terminal of the virtual machine. You can try predifined request to `register` endpoint. <br />
     As a result, you should get status code **200** and **"success": true**
 </Callout>
+
+## Login route
+**The implementation of login route is very analogous to the register route.**
+The login route accepts a **POST request** to the `/login` endpoint and expects the email and password properties in the request body. <br />
+The route first queries the useraccount table for a user with the provided email address. If no user is found, the route returns errro. If a user is found, the route compares the provided password with the stored password. If the passwords match, the route returns a success message indicating that authentication was successful. <br />
+
+Paste the following code into the `jwtAuth.ts` file. <br />
+```js filename="jwtAuth.ts" copy showLineNumbers
+// LOGIN
+router.post("/login", async (req, res) => {
+    const {email, password} = req.body;
+
+    try {
+        const user = await pool.query(
+            "SELECT * FROM useraccount WHERE email = $1",
+            [email]
+        );
+
+        if (user.rows.length === 0) {
+            return res.status(401).json("Invalid email.");
+        }
+
+        const validPassword = password === user.rows[0].password;
+
+        if (!validPassword) {
+            return res.status(401).json("Invalid password.");
+        }
+
+        res.json({
+            success: true,
+            message: "Authentication successful!",
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server error");
+    }
+});
+```
+
+<Callout emoji="💡">
+    Similarly as register route, you can test login route using predefined request in Postman. You can try to login with email and password of the user you have just registered. <br />
+    As a result, you should get status code **200** and JSON object with **"success": true** and **"message": "Authentication successful!"**
+</Callout>
+
+## Dashboard route
+As the last route in this lecture, we are going to implement the dashboard route. <br />
+In the `index.ts` file, add the following line in the `// ROUTES` section. <br />
+```js filename="index.ts" copy showLineNumbers
+app.use("/dashboard", require("./routes/dashboard"));
+```
+
+Then, create a new file `dashboard.ts` in the `routes` folder and paste the following code.
+```js filename="dashboard.ts" copy showLineNumbers
+const router = require("express").Router();
+import pool from "../dbServer"
+
+router.get("/", async (req, res) => {
+  try {
+    // req.user -> returns the object with id which represents userid in table
+    const user = await pool.query(
+      "SELECT firstname FROM useraccount WHERE password = $1",
+      [req.user.password]
+    );
+
+    res.json(user.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+module.exports = router;
+```
+<Callout type="info" emoji="ℹ️">
+The route handler queries a PostgreSQL database using the pool object to select the firstname column from the useraccount table where the password column matches the password of the authenticated user. The req.user object is expected to contain an id property that represents the ID of the authenticated user in the table.
+<br />
+If the query is successful, the route handler sends a JSON response containing the firstname of the user as the body of the response. The res.json method sends a JSON response to the client and automatically sets the appropriate Content-Type header in the response.
+<br />
+The router object is exported from the module, so that it can be mounted to the appropriate URL path in the main application file using the app.use method.
+</Callout>
+
+<Callout type="warning" emoji="⚠️">
+    Middleware will be added to this implementation to make it fully functional, so we will not test it in this lecture.
+</Callout>
+
+## Summary
+In this lecture, we have learned how to implement the authentication routes in the Node.js application. In the next section, we will have a closer look at the JWT authentication and we will adjust our current implementation accordingly.
