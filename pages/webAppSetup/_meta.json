@@ -1,9 +1,14 @@
 {
-  "intro": "Introduction",
+  "intro": "Intro",
   "init": "0 Init",
   "server": "1. Server",
   "routes": "2. Routes",
   "jwtGenerator": "3. JWT Generator",
   "middleware": "4. Middleware",
-  "privateRoutes": "5. Private Routes"
+  "privateRoutes": "5. Private Routes",
+  "client": "6. Client",
+  "reactRouter": "7. React Router",
+  "components": "8. Components",
+  "jwtValidation": "9. JWT Validation",
+  "finalWords": "Final Words"
 }

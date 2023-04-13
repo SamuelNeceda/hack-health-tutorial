@@ -1,0 +1,167 @@
+import {Callout} from 'nextra-theme-docs'
+import Image from 'next/image'
+
+## Intro
+In case of need, check out to the branch called `8_components`. It has all the components ready to be used.
+
+## Problem
+In the current implementation, the state of the app is reset when the page is refreshed, and so is the information, whether the token is valid or not.
+
+## Solution
+* Open the `App.js` file
+* Import the `useEffect` hook from `react`
+```js filename="App.js" copy showLineNumbers
+import React, {Fragment, useState, useEffect} from 'react';
+```
+* `useEffect` is going to run `checkAuthenticated()` method
+```js filename="App.js" copy showLineNumbers
+    // check the state after each reload
+    useEffect(() => {
+        checkAuthenticated();
+    }, []);
+``` 
+* `checkAuthenticated()` method is going to make an HTTP GET request to the `/auth/verify` endpoint, which is going to check if the token is valid or not. 
+* The response is parsed as JSON and checked to see if it is equal to true. If it is, the `setIsAuthenticated` function is called with true as an argument to indicate that the user is authenticated. Otherwise, `setIsAuthenticated` is called with false.
+```js filename="App.js" copy showLineNumbers
+    const checkAuthenticated = async () => {
+        try {
+            const res = await fetch("http://localhost:5000/auth/verify", {
+                method: "GET",
+                headers: {token: localStorage.token}
+            });
+
+            const parseRes = await res.json();
+            parseRes === true ? setIsAuthenticated(true) : setIsAuthenticated(false);
+        } catch (err) {
+            console.error(err.message);
+        }
+    };
+```
+### Whole code
+```js filename="App.js" copy showLineNumbers {2, 18-35}
+import './App.css';
+import React, {Fragment, useState, useEffect} from 'react';
+import {
+    BrowserRouter as Router,
+    Route,
+    Switch,
+    Redirect,
+} from "react-router-dom";
+import Dashboard from "./components/Dashboard";
+import Login from "./components/Login";
+import Register from "./components/Register";
+
+function App() {
+
+    // default value of state is false, meaning the user is not authenticated
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    const checkAuthenticated = async () => {
+        try {
+            const res = await fetch("http://localhost:5000/auth/verify", {
+                method: "GET",
+                headers: {token: localStorage.token}
+            });
+
+            const parseRes = await res.json();
+            parseRes === true ? setIsAuthenticated(true) : setIsAuthenticated(false);
+        } catch (err) {
+            console.error(err.message);
+        }
+    };
+
+    // check the state after each reload
+    useEffect(() => {
+        checkAuthenticated();
+    }, []);
+
+    // check if user is authenticated
+    const setAuth = (boolean) => {
+        setIsAuthenticated(boolean);
+    };
+
+    return (
+        <Fragment>
+            <Router>
+                <div className="container">
+
+                    {/* Define routes using the Switch and Route components from react-router-dom */}
+                    <Switch>
+                        {/* If the user is not authenticated, display the Login component */}
+                        <Route
+                            exact
+                            path="/login"
+                            render={(props) =>
+                                !isAuthenticated ? (
+                                    <Login {...props} setAuth={setAuth}/>
+                                ) : (
+                                    /* If the user is authenticated, redirect to the Dashboard component */
+                                    <Redirect to="/dashboard"/>
+                                )
+                            }
+                        />
+                        {/* If the user is not authenticated, display the Register component */}
+                        <Route
+                            exact
+                            path="/register"
+                            render={(props) =>
+                                !isAuthenticated ? (
+                                    <Register {...props} setAuth={setAuth}/>
+                                ) : (
+                                    /* If the user is authenticated, redirect to the Login component */
+                                    <Redirect to="/login"/>
+                                )
+                            }
+                        />
+                        {/* If the user is authenticated, display the Dashboard component */}
+                        <Route
+                            exact
+                            path="/dashboard"
+                            render={(props) =>
+                                isAuthenticated ? (
+                                    <Dashboard {...props} setAuth={setAuth}/>
+                                ) : (
+                                    /* If the user is not authenticated, redirect to the Login component */
+                                    <Redirect to="/login"/>
+                                )
+                            }
+                        />
+                    </Switch>
+
+                </div>
+            </Router>
+        </Fragment>
+    );
+}
+
+export default App;
+```
+
+### Test
+* You can now check, that after successful login, even if the dashboard page is refreshed, the user is still logged in. It is because the token is stored in the `localStorage` and the `checkAuthenticated()` method is called after each reload.
+
+## [Bonus] Notifications
+* For the notifications, we are going to use the `react-toastify` package. In the components, it is already implemented. This is an extraction from `Login.js` component:
+<Image src="/webApp/toast.png" alt="Register page" width={500} height={300}/>
+* What we have to do to make it actually work is to import this code into the `App.js` file.:
+```js filename="App.js" copy showLineNumbers
+import {ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+```
+* And then, we have to add the `ToastContainer` component to the `App.js` file:
+```js filename="App.js" copy showLineNumbers {5}
+                    // rest of the code
+                    </Switch>
+                </div>
+            </Router>
+            <ToastContainer/>
+        </Fragment>
+    );
+}
+
+export default App;
+```
+
+## Summary
+* In this **final** lecture, we have implemented the `useEffect` hook to check if the user is authenticated after each reload.
+* We have also implemented the `react-toastify` package to display notifications.

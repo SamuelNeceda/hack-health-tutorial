@@ -1,0 +1,624 @@
+import {Callout} from 'nextra-theme-docs'
+import Image from 'next/image'
+
+## Intro
+In case of need, check out to the branch called `7_reactRouter`. As the name of the branch suggests, it has already the implementation of the React Router and the basic structure of components.
+
+## Register component
+In this section, we will go through smaller code fragments representing the parts of the register component. In the end, there will a full code of the component you can copy and paste into your project.
+
+* The following code returns a form for user registration with various input fields such as first name, last name, title, sex, birth number, birth date, phone number, email, and password.
+* The form includes a submit button for registration and a link to log in if the user already has an account.
+* The form also includes some labels to indicate which input fields are required, and it uses a custom component called "TopList" and "Footer" for the header and footer of the page
+* The "onChange" event handler is used to update the values of the input fields when the user types in them.
+<Callout emoji="💡">
+    Bootstrap is used for styling the form. 
+</Callout>
+```js filename="Register.js" copy showLineNumbers
+return (
+        <>
+            <TopList/>
+            <h1 className="text-center mp-5">Register</h1>
+            <div className="square-container-register">
+                <form onSubmit={onSubmitForm}>
+                    <label htmlFor="firstname" className="mt-3 required-label">First Name</label>
+                    <input
+                        type="text"
+                        name="firstname"
+                        value={firstname}
+                        onChange={(event) => onChange(event)}
+                        placeholder="firstname"
+                        className="form-control mp-3"
+                    />
+                    <label htmlFor="lastname" className="mt-3 required-label">Last Name</label>
+                    <input
+                        type="text"
+                        name="lastname"
+                        value={lastname}
+                        onChange={(event) => onChange(event)}
+                        placeholder="lastname"
+                        className="form-control mp-3"
+                    />
+                    <label htmlFor="title" className="mt-3">Title</label>
+                    <input
+                        type="text"
+                        name="title"
+                        value={title}
+                        onChange={(event) => onChange(event)}
+                        placeholder="title"
+                        className="form-control mp-3"
+                    />
+                    <label htmlFor="sex" className="mt-3 required-label">Sex</label>
+                    <select
+                        name="sex"
+                        value={sex}
+                        onChange={(event) => onChange(event)}
+                        className="form-select"
+                        aria-label="Default select example"
+                        style={{height: "30px"}}
+                    >
+                        <option value="" disabled selected>
+                            Sex
+                        </option>
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                    </select>
+                    <label htmlFor="birthnumber" className="mt-3 required-label">Birth number</label>
+                    <input
+                        type="text"
+                        name="birthnumber"
+                        value={birthnumber}
+                        onChange={(event) => onChange(event)}
+                        placeholder="YYMMDD/NNNN"
+                        className="form-control mp-3"
+                        maxLength={11}
+                    />
+                    <label htmlFor="birthdate" className="mt-3 required-label">Birth date</label>
+                    <input
+                        type="date"
+                        name="birthdate"
+                        value={birthdate}
+                        onChange={(event) => onChange(event)}
+                        placeholder="birthdate"
+                        className="form-control mp-3"
+                    />
+                    <label htmlFor="phone" className="mt-3 required-label">Phone number</label>
+                    <input
+                        type="tel"
+                        name="phone"
+                        value={phone}
+                        onChange={(event) => onChange(event)}
+                        placeholder="phone"
+                        className="form-control mp-3"
+                        maxLength={24}
+                    />
+                    <label htmlFor="email" className="mt-3 required-label">Email</label>
+                    <input
+                        type="email"
+                        name="email"
+                        value={email}
+                        onChange={(event) => onChange(event)}
+                        placeholder="email"
+                        className="form-control mp-3"
+                    />
+                    <label htmlFor="password" className="mt-3 required-label">Password</label>
+                    <input
+                        type="password"
+                        name="password"
+                        value={password}
+                        onChange={(event) => onChange(event)}
+                        placeholder="password"
+                        className="form-control mp-3"
+                    />
+                    <button className="my-4 btn btn-success btn-block">Register</button>
+                    <p className="required-field-text required-label">Required field</p>
+                </form>
+            </div>
+            <div className="my-4 mx-auto text-center">
+                <p className="text-center my-3">Already have an account?</p>
+                <button className="btn btn-primary" onClick={handleLoginClick}>Login</button>
+            </div>
+            <Footer/>
+        </>
+    );
+```
+The form used two additional custom components, which we need to implement. Create corresponding files and paste the following code into them.
+```js filename="TopList.js" copy showLineNumbers
+import {Link} from 'react-router-dom';
+
+function TopList() {
+    return (
+        <div className="top-list">
+            <ul>
+                <li style={{listStyle: 'none', display: 'inline-block', marginRight: '10px', padding: 0, margin: 0}}>
+                    <Link to="/">
+                        <img src="/full_logo.png" alt="Home" width="200" height="40"
+                             style={{position: 'absolute', top: 10, left: 10}}/>
+                    </Link>
+                </li>
+            </ul>
+        </div>
+    );
+}
+
+export default TopList;
+```
+
+```js filename="Footer.js" copy showLineNumbers
+import React from 'react';
+
+const Footer = () => {
+    return (
+        <footer className="footer">
+            <p>© 2023 Samuel Neceda. All Rights Reserved.</p>
+        </footer>
+    );
+}
+
+export default Footer;
+```
+
+The following code is going to collect all the inputs. For now, we will set all the values to empty strings.
+```js filename="Register.js" copy showLineNumbers
+    const [inputs, setInputs] = useState({
+        firstname: "",
+        lastname: "",
+        title: "",
+        sex: "",
+        birthnumber: "",
+        birthdate: "",
+        phone: "",
+        email: "",
+        password: "",
+    });
+```
+Now, we will destructure the inputs:
+```js filename="Register.js" copy showLineNumbers
+    const {
+        firstname,
+        lastname,
+        title,
+        sex,
+        birthnumber,
+        birthdate,
+        phone,
+        email,
+        password,
+    } = inputs;
+```
+The following code is used to update the state with the current value of the form inputs as the user types or selects values.
+```js filename="Register.js" copy showLineNumbers
+    const onChange = (event) =>
+        setInputs({...inputs, [event.target.name]: event.target.value});
+```
+
+<Callout emoji="💡">
+    The `onSubmitForm` function is used to handle the form submission. Refer to inline comments for better understanding.
+</Callout>
+
+```js filename="Register.js" copy showLineNumbers
+// Define a function to handle form submission
+const onSubmitForm = async (event) => {
+    event.preventDefault(); // Prevent the default behavior of the browser (page reload)
+
+    try {
+        // Create a JSON object with user input data
+        const body = {
+            firstname,
+            lastname,
+            title,
+            sex,
+            birthnumber,
+            birthdate,
+            phone,
+            email,
+            password,
+        };
+
+        // Send a POST request to the server to register the user
+        const response = await fetch("http://localhost:5000/auth/register", {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json",
+            },
+            body: JSON.stringify(body),
+        });
+
+        // Parse the response into JSON format
+        const parseJSON = await response.json();
+
+        // If a token is received from the server, save it to local storage and set authentication to true
+        if (parseJSON.token) {
+            localStorage.setItem("token", parseJSON.token);
+            setAuth(true);
+            toast.success("Registered successfully");
+        } 
+        // If a token is not received, display the error message and set authentication to false
+        else {
+            toast.error(parseJSON);
+            setAuth(false);
+        }
+    } 
+    // If an error occurs, log it to the console
+    catch (err) {
+        console.error(err.message);
+    }
+};
+```
+The useHistory hook from the react-router-dom library is used to access the browser history object and navigate to the login page when the "Login" button is clicked.
+```js filename="Register.js" copy showLineNumbers
+    const history = useHistory();
+
+    const handleLoginClick = () => {
+        history.push('/login');
+    };
+```
+
+### Full implementation
+Insert the following code into the `Register.js` file.
+```js filename="Register.js" copy showLineNumbers
+import React, {useState} from "react";
+import {useHistory} from "react-router-dom";
+import {toast} from "react-toastify";
+import Footer from "./Footer";
+import TopList from "./TopList";
+
+const Register = ({setAuth}) => {
+    const [inputs, setInputs] = useState({
+        firstname: "",
+        lastname: "",
+        title: "",
+        sex: "",
+        birthnumber: "",
+        birthdate: "",
+        phone: "",
+        email: "",
+        password: "",
+    });
+
+    // Destructure
+    const {
+        firstname,
+        lastname,
+        title,
+        sex,
+        birthnumber,
+        birthdate,
+        phone,
+        email,
+        password,
+    } = inputs;
+
+    const onChange = (event) =>
+        setInputs({...inputs, [event.target.name]: event.target.value});
+
+    const onSubmitForm = async (event) => {
+        event.preventDefault(); // Prevents the default behavior of the browser(reload)
+        try {
+            const body = {
+                firstname,
+                lastname,
+                title,
+                sex,
+                birthnumber,
+                birthdate,
+                phone,
+                email,
+                password,
+            };
+            const response = await fetch("http://localhost:5000/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify(body),
+            });
+
+            const parseJSON = await response.json();
+
+            if (parseJSON.token) {
+                localStorage.setItem("token", parseJSON.token); // Save the token in the local storage
+                setAuth(true);
+                toast.success("Registered successfully");
+            } else {
+                toast.error(parseJSON);
+                setAuth(false);
+            }
+        } catch (err) {
+            console.error(err.message);
+        }
+    };
+
+    const history = useHistory();
+
+    const handleLoginClick = () => {
+        history.push('/login');
+    };
+
+    return (
+        <>
+            <TopList/>
+            <h1 className="text-center mp-5">Register</h1>
+            <div className="square-container-register">
+                <form onSubmit={onSubmitForm}>
+                    <label htmlFor="firstname" className="mt-3 required-label">First Name</label>
+                    <input
+                        type="text"
+                        name="firstname"
+                        value={firstname}
+                        onChange={(event) => onChange(event)}
+                        placeholder="firstname"
+                        className="form-control mp-3"
+                    />
+                    <label htmlFor="lastname" className="mt-3 required-label">Last Name</label>
+                    <input
+                        type="text"
+                        name="lastname"
+                        value={lastname}
+                        onChange={(event) => onChange(event)}
+                        placeholder="lastname"
+                        className="form-control mp-3"
+                    />
+                    <label htmlFor="title" className="mt-3">Title</label>
+                    <input
+                        type="text"
+                        name="title"
+                        value={title}
+                        onChange={(event) => onChange(event)}
+                        placeholder="title"
+                        className="form-control mp-3"
+                    />
+                    <label htmlFor="sex" className="mt-3 required-label">Sex</label>
+                    <select
+                        name="sex"
+                        value={sex}
+                        onChange={(event) => onChange(event)}
+                        className="form-select"
+                        aria-label="Default select example"
+                        style={{height: "30px"}}
+                    >
+                        <option value="" disabled selected>
+                            Sex
+                        </option>
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                    </select>
+                    <label htmlFor="birthnumber" className="mt-3 required-label">Birth number</label>
+                    <input
+                        type="text"
+                        name="birthnumber"
+                        value={birthnumber}
+                        onChange={(event) => onChange(event)}
+                        placeholder="YYMMDD/NNNN"
+                        className="form-control mp-3"
+                        maxLength={11}
+                    />
+                    <label htmlFor="birthdate" className="mt-3 required-label">Birth date</label>
+                    <input
+                        type="date"
+                        name="birthdate"
+                        value={birthdate}
+                        onChange={(event) => onChange(event)}
+                        placeholder="birthdate"
+                        className="form-control mp-3"
+                    />
+                    <label htmlFor="phone" className="mt-3 required-label">Phone number</label>
+                    <input
+                        type="tel"
+                        name="phone"
+                        value={phone}
+                        onChange={(event) => onChange(event)}
+                        placeholder="phone"
+                        className="form-control mp-3"
+                        maxLength={24}
+                    />
+                    <label htmlFor="email" className="mt-3 required-label">Email</label>
+                    <input
+                        type="email"
+                        name="email"
+                        value={email}
+                        onChange={(event) => onChange(event)}
+                        placeholder="email"
+                        className="form-control mp-3"
+                    />
+                    <label htmlFor="password" className="mt-3 required-label">Password</label>
+                    <input
+                        type="password"
+                        name="password"
+                        value={password}
+                        onChange={(event) => onChange(event)}
+                        placeholder="password"
+                        className="form-control mp-3"
+                    />
+                    <button className="my-4 btn btn-success btn-block">Register</button>
+                    <p className="required-field-text required-label">Required field</p>
+                </form>
+            </div>
+            <div className="my-4 mx-auto text-center">
+                <p className="text-center my-3">Already have an account?</p>
+                <button className="btn btn-primary" onClick={handleLoginClick}>Login</button>
+            </div>
+            <Footer/>
+        </>
+    );
+};
+export default Register;
+```
+### Design
+<Image src="/webApp/register.png" alt="Register page" width={700} height={300}/>
+
+### Test
+* Make sure the server (`npm run dev`) and client (`npm start`) are running
+* Navigate to the `http://localhost:3001/register`
+* After filling up the form and clicking the `Register` button, you should register a new user. For now, you can verify in the database that the new user was created.
+
+## Login component
+* As long as there is a common logic between the `Register` and `Login` components, we will not dig into the details of the `Login` component.
+* Replace the current implementation of the `Login` component with the following code.
+```js filename="Login.js" copy showLineNumbers
+import React, {useState} from "react";
+import {useHistory} from "react-router-dom";
+import {toast} from "react-toastify";
+import Footer from "./Footer";
+import TopList from "./TopList";
+
+const Login = ({setAuth}) => {
+    const [inputs, setInputs] = useState({
+        email: "",
+        password: "",
+    });
+
+    const {email, password} = inputs;
+
+    const onChange = (event) =>
+        setInputs({...inputs, [event.target.name]: event.target.value});
+
+    const onSubmitForm = async (event) => {
+        event.preventDefault();
+        try {
+            const body = {email, password};
+            const response = await fetch("http://localhost:5000/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify(body),
+            });
+
+            const parseJSON = await response.json();
+
+            if (parseJSON.token) {
+                localStorage.setItem("token", parseJSON.token);
+                setAuth(true);
+                toast.success("Logged in Successfully");
+            } else {
+                if (parseJSON.success === false) {
+                    toast.info(parseJSON.message);
+                } else {
+                    setAuth(false);
+                    toast.error(parseJSON);
+                }
+            }
+        } catch (err) {
+            console.error(err.message);
+        }
+    };
+
+    const history = useHistory();
+
+    const handleRegisterClick = () => {
+        history.push("/register");
+    };
+
+    return (
+        <div>
+            <TopList/>
+            <h1 className="text-center mp-5">Login</h1>
+            <div className="square-container-login">
+                <form onSubmit={onSubmitForm} name="login_form">
+                    <input
+                        type="text" // email
+                        name="email"
+                        value={email}
+                        onChange={(event) => onChange(event)}
+                        placeholder="email"
+                        className="form-control my-3"
+                    />
+                    <input
+                        type="password"
+                        name="password"
+                        value={password}
+                        onChange={(event) => onChange(event)}
+                        placeholder="password"
+                        className="form-control my-3"
+                    />
+                    <button className="btn btn-success btn-block" name="login" type="submit">
+                        Login
+                    </button>
+                </form>
+            </div>
+            <div className="my-4 mx-auto text-center">
+                <p className="text-center my-3">Don't have an account?</p>
+                <button className="btn btn-primary" onClick={handleRegisterClick}>
+                    Register
+                </button>
+            </div>
+            <Footer/>
+        </div>
+    );
+};
+
+export default Login;
+```
+### Design
+<Image src="/webApp/login.png" alt="Login page" width={700} height={300}/>
+
+## Dashboard component
+* The `Dashboard` component will be used to display the user's profile.
+* It does not contain a form, so the implementation is a bit different than for the previous components.
+* Replace the current implementation of the `Dashboard` component with the following code.
+    **Detailed comments should help you understand the code.**
+```js filename="Dashboard.js" copy showLineNumbers
+import React, {useState, useEffect} from "react";
+import {toast} from "react-toastify";
+import Footer from "./Footer";
+
+const Dashboard = ({setAuth}) => {
+    const [name, setName] = useState(""); // Defining state for user's name
+
+    const getProfile = async () => { // Asynchronous function to fetch user profile data
+        try {
+            const res = await fetch("http://localhost:5000/dashboard/", { // Making a GET request to the private route
+                method: "GET",
+                headers: {token: localStorage.token} // Including authorization token in headers
+            });
+
+            const parseData = await res.json(); // Parsing the response data
+            setName(parseData.firstname); // Setting user's first name in state
+        } catch (err) {
+            console.error(err.message);
+        }
+    };
+
+    const logout = (e) => { // Function to handle logout button click event
+        e.preventDefault(); // Preventing default form submission behavior
+        try {
+            localStorage.removeItem("token"); // Removing token from local storage
+            setAuth(false); // Setting authentication state to false
+            toast.success("Logout successfully");
+        } catch (err) {
+            console.error(err.message);
+        }
+    };
+
+    useEffect(() => { // Using useEffect hook to fetch user profile data when component mounts
+        getProfile();
+    }, []); // Passing an empty array as a dependency to run the effect only once
+
+    return (
+        <div style={{paddingTop: "40px"}}>
+            <h1 className="mt-5 text-center">Personal Dashboard</h1>
+            <h2 className="text-center">Welcome {name}</h2>
+            <button onClick={e => logout(e)} className="btn btn-primary"
+                    style={{position: "absolute", top: "30px", right: "30px"}}>
+                Logout
+            </button>
+            <Footer/>
+        </div>
+    );
+};
+
+export default Dashboard; // Exporting Dashboard component
+```
+### Design
+<Image src="/webApp/dashboard.png" alt="Dashboard page" width={700} height={300}/>
+
+## Test
+Now, you can test the whole flow of the application:
+* Register new use
+* Log in with a newly created user
+* Dashboard with user's name should be displayed
+
+## Summary
+* In this lecture, you learned quite a lot about implementing components in React application. 
+* In the next and final lecture, we will implement validation of jwt token on page refresh and make final adjustments

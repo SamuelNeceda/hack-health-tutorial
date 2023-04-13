@@ -1,0 +1,151 @@
+import {Callout} from 'nextra-theme-docs'
+import Image from 'next/image'
+
+## Intro
+You should be in the branch `6_client`. This branch contains a skeleton for the client and we will be adding the code for the client in this lecture.
+
+## Components
+* Create a new folder called `components` inside the `src` folder.
+* Inside this newly created folder, create a new file called `Dashboard.js`, which will contain the code for the dashboard component.
+* Paste the following code in the `Dashboard.js` file:
+```js filename="Dashboard.js" copy showLineNumbers
+import React, {Fragment} from 'react';
+
+const Dashboard = ({setAuth}) => {
+    return (
+        <Fragment>
+            <h1>Dashboard</h1>
+            {/* When the button is clicked, it calls setAuth with the value false. */}
+            <button onClick={() => setAuth(false)}>Logout</button>
+        </Fragment>
+    );
+}
+
+export default Dashboard;
+```
+* In a very similar fashion, create `Login.js` and `Register.js` components.
+```js filename="Login.js" copy showLineNumbers
+import React, {Fragment} from 'react';
+
+const Login = ({setAuth}) => {
+    return (
+        <Fragment>
+            <h1>Login</h1>
+            {/* When the button is clicked, it calls setAuth with the value true. */}
+            <button onClick={() => setAuth(true)}>Login</button>
+        </Fragment>
+    );
+}
+
+export default Login;
+```
+
+```js filename="Register.js" copy showLineNumbers
+import React, {Fragment} from 'react';
+
+const Register = () => {
+    return (
+        <Fragment>
+            <h1>Register</h1>
+        </Fragment>
+    );
+}
+
+export default Register;
+```
+
+## React Router
+* In the `App.js` file, insert the following code: <br />
+    **Follow the inserted comments for better understanding.**
+```js filename="App.js" copy showLineNumbers
+import './App.css';
+import React, {Fragment, useState} from 'react';
+import {
+    BrowserRouter as Router,
+    Route,
+    Switch,
+    Redirect,
+} from "react-router-dom";
+import Dashboard from "./components/Dashboard";
+import Login from "./components/Login";
+import Register from "./components/Register";
+
+function App() {
+
+    // default value of state is false, meaning the user is not authenticated
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    // check if user is authenticated
+    const setAuth = (boolean) => {
+        setIsAuthenticated(boolean);
+    };
+
+    return (
+        <Fragment>
+            <Router>
+                <div className="container">
+
+                    {/* Define routes using the Switch and Route components from react-router-dom */}
+                    <Switch>
+                        {/* If the user is not authenticated, display the Login component */}
+                        <Route
+                            exact
+                            path="/login"
+                            render={(props) =>
+                                !isAuthenticated ? (
+                                    <Login {...props} setAuth={setAuth}/>
+                                ) : (
+                                    /* If the user is authenticated, redirect to the Dashboard component */
+                                    <Redirect to="/dashboard"/>
+                                )
+                            }
+                        />
+                        {/* If the user is not authenticated, display the Register component */}
+                        <Route
+                            exact
+                            path="/register"
+                            render={(props) =>
+                                !isAuthenticated ? (
+                                    <Register {...props} setAuth={setAuth}/>
+                                ) : (
+                                    /* If the user is authenticated, redirect to the Login component */
+                                    <Redirect to="/login"/>
+                                )
+                            }
+                        />
+                        {/* If the user is authenticated, display the Dashboard component */}
+                        <Route
+                            exact
+                            path="/dashboard"
+                            render={(props) =>
+                                isAuthenticated ? (
+                                    <Dashboard {...props} setAuth={setAuth}/>
+                                ) : (
+                                    /* If the user is not authenticated, redirect to the Login component */
+                                    <Redirect to="/login"/>
+                                )
+                            }
+                        />
+                    </Switch>
+
+                </div>
+            </Router>
+        </Fragment>
+    );
+}
+
+export default App;
+```
+## Test
+* If the app is not already running, run `npm start` to start the app.
+* Open the app in the browser and navigate to `http://localhost:3001/login`.
+* You should see the login page and button to log in.
+* After clicking the login button, you should be redirected to the dashboard page.
+* In the dashboard page, click the logout button, which should redirect you back to the login page.
+<Callout emoji="💡">
+    When you are authenticated after successful login, you should be in the dashboard page. **BUT**, if you refresh the page, you will be redirected to the login page. This is because the state is lost when the page is refreshed. We will be fixing this in the next steps by using useEffect. 
+</Callout>
+
+## Summary
+* In this lecture, we have created the components for the client and added the code for the React Router. We have also tested the app and verified that the routes are working as expected.
+* In the next lecture, we will be adjusting and adding code for the components to make them work with the backend.
