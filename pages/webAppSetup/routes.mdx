@@ -2,10 +2,10 @@ import {Callout} from 'nextra-theme-docs'
 import Image from 'next/image'
 
 ## Intro
-In case of need, check out to the branch called `2_routes`. This branch have already implemented the code for server.
+In case of need, check out to the branch called `2_routes`. This branch has already implemented the code for the server.
 
 ## Register route
-1. Create a new folder called `routes` in the same level as `database-scripts` folder.
+1. Create a new folder called `routes` on the same level as `database-scripts` folder.
 2. Inside the `routes` folder, create a new file called `jwtAuth.ts`.
 3. In the `index.ts` file, add the following code after `// ROUTES`:
 ```js filename="index.ts" copy showLineNumbers
@@ -14,7 +14,7 @@ app.use("/auth", require("./routes/jwtAuth"));
 ```
 It means that if you hit the `/auth` route, it will go to the `jwtAuth.ts` file. <br />
 <Callout type="info" emoji="ℹ️">
-Now, we are going to build the register route step by step and the whole code will be presented at the end of this section. The basic idea is that in the final app, the user will enter the values to the form and the form will be send in the POST request to the `/register` endpoint in JSON format. Then, it will evaluated and if everything is ok, the user will be inserted into the database and authorised.
+Now, we are going to build the register route step by step and the whole code will be presented at the end of this section. The basic idea is that in the final app, the user will enter the values to the form and the form will be sent in the POST request to the `/register` endpoint in JSON format. Then, it will be evaluated and if everything is ok, the user will be inserted into the database and authorized.
 </Callout>
 
 When the JSON from the client side is received, we need to destructure it and get the values from the request body. <br />
@@ -83,7 +83,7 @@ router.post("/register", async (req, res) => {
 module.exports = router;
 ```
 
-In the next and **final section**, we are going to insert user into the database, return the response or throw an error when something during an execution goes wrong.
+In the next and **final section**, we are going to insert the user into the database, return the response or throw an error when something during an execution goes wrong.
 
 ```js filename="index.ts" copy showLineNumbers {32-55}
 import {Router} from "express";
@@ -165,14 +165,14 @@ export default pool;
 ```
 
 <Callout emoji="💡">
-    Now, start the server by running `npm run dev` and open Postman by running `Postman` in the terminal of the virtual machine. You can try predifined request to `register` endpoint. <br />
+    Now, start the server by running `npm run dev` and open Postman by running `Postman` in the terminal of the virtual machine. You can try a predefined request to `register` endpoint. <br />
     As a result, you should get status code **200** and **"success": true**
 </Callout>
 
 ## Login route
-**The implementation of login route is very analogous to the register route.**
+**The implementation of the `login` route is very analogous to the `register` route.**
 The login route accepts a **POST request** to the `/login` endpoint and expects the email and password properties in the request body. <br />
-The route first queries the useraccount table for a user with the provided email address. If no user is found, the route returns errro. If a user is found, the route compares the provided password with the stored password. If the passwords match, the route returns a success message indicating that authentication was successful. <br />
+The route first queries the useraccount table for a user with the provided email address. If no user is found, the route returns an error. If a user is found, the route compares the provided password with the stored password. If the passwords match, the route returns a success message indicating that authentication was successful. <br />
 
 Paste the following code into the `jwtAuth.ts` file. <br />
 ```js filename="jwtAuth.ts" copy showLineNumbers
@@ -208,7 +208,7 @@ router.post("/login", async (req, res) => {
 ```
 
 <Callout emoji="💡">
-    Similarly as register route, you can test login route using predefined request in Postman. You can try to login with email and password of the user you have just registered. <br />
+    Similarly, as `register` route, you can test `login` route using a predefined request in Postman. You can try to log in with the email and password of the user you have just registered. <br />
     As a result, you should get status code **200** and JSON object with **"success": true** and **"message": "Authentication successful!"**
 </Callout>
 
@@ -246,7 +246,7 @@ The route handler queries a PostgreSQL database using the pool object to select 
 <br />
 If the query is successful, the route handler sends a JSON response containing the firstname of the user as the body of the response. The res.json method sends a JSON response to the client and automatically sets the appropriate Content-Type header in the response.
 <br />
-The router object is exported from the module, so that it can be mounted to the appropriate URL path in the main application file using the app.use method.
+The router object is exported from the module so that it can be mounted to the appropriate URL path in the main application file using the app.use method.
 </Callout>
 
 <Callout type="warning" emoji="⚠️">

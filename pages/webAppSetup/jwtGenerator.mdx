@@ -2,7 +2,7 @@ import {Callout} from 'nextra-theme-docs'
 import Image from 'next/image'
 
 ## Intro
-In case of need, check out to the branch called `3_jwtGenerator`. This branch have already implemented handling of register, login and dashboard routes. You can use it as a reference.
+In case of need, check out to the branch called `3_jwtGenerator`. This branch has already implemented the handling of register, login, and dashboard routes. You can use it as a reference.
 
 ## About JWT
 JSON Web Token (JWT) is a standard for securely transmitting information between parties as a JSON object. It is often used in web applications as a means of representing claims securely between two parties. <br />
@@ -18,7 +18,7 @@ If you want to learn more about JWT, visit its [official website](https://jwt.io
 When a user logs into an application, a JWT is generated on the server and sent back to the client. The client then stores the token and includes it in all subsequent requests to the server. The server can then use the token to verify the identity of the user and ensure that they are authorized to access the requested resources.
 
 <Callout emoji="💡">
-    That is exactly what we are going to do. In our application, user will be authenticated by a token that is sent with every request. The token is signed with a secret key that is only known to the server and is stored in the local storage.
+    That is exactly what we are going to do. In our application, the user will be authenticated by a token that is sent with every request. The token is signed with a secret key that is only known to the server and is stored in the local storage.
 </Callout>
 
 ## JWT Generator
@@ -35,7 +35,7 @@ JWT_SECRET=VeryWeakSecret123-
 
 ### Token generation
 Now, we need to generate a token. We will use the `jsonwebtoken` package for that. The package is already installed. <br />
-In the same structure as the `routes` directory, create a new directory called `utils`. In this directory, create a new file called `jwtGenerator.ts` and paste a following code to it:
+In the same structure as the `routes` directory, create a new directory called `utils`. In this directory, create a new file called `jwtGenerator.ts` and paste the following code to it:
 ```js filename="jwtGenerator.ts" copy showLineNumbers
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -119,11 +119,11 @@ router.post("/register", async (req, res) => {
 In this modification, jwt token will be generated based on user`s password and it will be present in the response.
 
 <Callout emoji="💡">
-    Make exactly the same modification in the login route, so now it will include also generated jwt token in the response.
+    Make the same modification in the login route, so now it will include also generated jwt token in the response.
 </Callout>
 
 ## Encryption of passwords
-As you might noticed, currently we store passwords just as plain text. Now, we are going to implement better solution (but keep in mind, better does not mean the best)
+As you might notice, currently we store passwords just as plain text. Now, we are going to implement a better solution (but keep in mind, better does not mean the best)
 1. In the `jwtAuth.ts` file, import:
 ```bash
 import bcrypt from "bcrypt";

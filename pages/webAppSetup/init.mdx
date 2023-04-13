@@ -5,14 +5,14 @@ import Image from 'next/image'
 Check out to the branch called `0_init`. <br />
 This branch only contains separate folders to divide the logic and implementation for the client and server. It already contains the `.gitignore` file and README.md files, so you do not have to worry about it.
 
-## Initialization of server side
+## Initialization of server-side
 Navigate to the `server` folder in the terminal. <br />
 Run the following command to initialize the server side.
 ```bash copy
 npm init -y
 ```
 <Callout type="info" emoji="ℹ️">
-This will create a default `package.json` file in the `server` folder. It contains the basic metadata for the project, such as its name, version, description, scripts and dependencies.
+This will create a default `package.json` file in the `server` folder. It contains the basic metadata for the project, such as its name, version, description, scripts, and dependencies.
 </Callout>
 To meet our needs, we need to modify the `package.json` file. <br />
 Replace the content of the file with the following code:
@@ -120,7 +120,7 @@ The comments should help you to understand individual options.
 
 ## Database scripts
 * Now, when we have a basic structure, create a new folder called `src` and inside it, create a new folder called `database-scripts`. <br />
-This folder will contain all the scripts needed to create, seed and drop the database. We are not going to dig deeper into them, so just create the three files and paste the code inside them.
+This folder will contain all the scripts needed to create, seed, and drop the database. We are not going to dig deeper into them, so just create the three files and paste the code inside them.
 ```js filename="dbCreate.ts" copy showLineNumbers
 const dotenv = require('dotenv');
 const { Client } = require('pg');
@@ -319,5 +319,5 @@ DB_NAME=hackhealthdb
 ```
 
 ## Summary
-Congratulations, you have successfully created a basic structure of a Node.js application with a scipts for creating a PostgreSQL database and tables. In the next chapter, we will create an Express server and initialize the database connection.
+Congratulations, you have successfully created a basic structure of a Node.js application with scripts for creating a PostgreSQL database and tables. In the next chapter, we will create an Express server and initialize the database connection.
 

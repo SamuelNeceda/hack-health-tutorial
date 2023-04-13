@@ -2,7 +2,7 @@ import {Callout} from 'nextra-theme-docs'
 import Image from 'next/image'
 
 ## Intro
-In case you have worries that you might not implement everything correctly from the last lecture, you can check out to the branch called `1_server`. If you are goof with your implementation, there is no need to check out to this branch. <br />
+In case you have worries that you might not implement everything correctly from the last lecture, you can check out to the branch called `1_server`. If you are good with your implementation, there is no need to check out to this branch. <br />
 <Callout type="info" emoji="ℹ️">
 This approach also applies to all the other lectures. You can either check out to the branch where you have all previously implemented code ready for you, or you can keep up working in the same branch.
 </Callout>
@@ -11,7 +11,7 @@ This approach also applies to all the other lectures. You can either check out t
 <Image src="/webApp/1_structure.png" alt="Project structure" width={300} height={300}/>
 
 ## Server
-For your app, we are going to use Express.js server, which is a minimal and flexible Node.js web application framework. <br />
+For your app, we are going to use an Express.js server, which is a minimal and flexible Node.js web application framework. <br />
 1. In the server\`s src folder, create a file called `index.ts`.
 2. Paste the following code to the file:
 ```js filename="index.ts" copy showLineNumbers
@@ -47,7 +47,7 @@ try {
 ```
 Go through individual lines of code and try to understand their purpose. <br />
 
-3. In the line 13, we are defining a default port for the server to listen to in case the environment variable `PORT` is not defined. <br />
+3. In line 13, we are defining a default port for the server to listen to in case the environment variable `PORT` is not defined. <br />
 We need to define the port in the environment variable file. <br />
 Edit the `.env` file and add the following lines:
 ```bash copy
@@ -107,5 +107,5 @@ To recreate the database, tables, and records, run `npm run db-create` and `npm 
 </Callout>
 
 ## Summary
-By following the tutorial, you should have an Express server running on port 5000 and database with seeded data. Lets move to the next section!
+By following the tutorial, you should have an Express server running on port 5000 and a database with seeded data. Let's move to the next section!
 

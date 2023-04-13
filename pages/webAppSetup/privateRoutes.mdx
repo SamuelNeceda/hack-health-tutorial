@@ -1,0 +1,81 @@
+import {Callout} from 'nextra-theme-docs'
+import Image from 'next/image'
+
+## Intro
+In case of need, check out to the branch called `5_privateRoutes`. This branch has already implemented jwt verification and input validation middleware.
+
+## What is a private route?
+Shortly, a private route is a route that can only be accessed by authenticated users. In the HackHealth app, users are authenticated by a JWT token. This token is stored in the browser's local storage. The token is sent to the server with every request. The server verifies the token and if it is valid, the user is allowed to access the private route.
+
+## Verify route
+<Callout type="info" emoji="ℹ️">
+This private route is going to consistently verify the user`s token whenever the client (React application) is refreshed. The big idea is that on every refresh, the client will post a get request to the server (hit the verify route we are going to implement) and verify if the user is still authenticated. The response from the server will be true or false. According to this, the state of the React application will be set and it will determine which pages the user can access.
+</Callout>
+
+To implement the private route, navigate to the `jwtAuth.ts` file. <br />
+`/register` and `/login` routes are already implemented, now we are going to add a private route called `verify`:
+```js filename="jwtAuth.ts" copy showLineNumbers
+// VERIFY
+// Check if the token is valid before accessing private routes
+// Verify whenever the user refreshes the page
+router.get("/verify", authorization, (req, res) => {
+    try {
+        res.json(true);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server error");
+    }
+});
+```
+### Explanation
+When we hit `/verify` route, the `authorization` middleware will be executed (implemented in the previous lecture). If the **token is valid**, the user will be **allowed to access the private route** and the response will be **true**. If the token is invalid, the user will not be allowed to access the private route.
+
+### Test
+1. Open the Postman
+2. Use the `POST` login request to log in with a valid user. From the response`s body, copy the token.
+3. In the `GET` request called `verifyToken`, paste the token in the Body of the request in the token key.
+4. Send the request. The response should be `true`.
+5. If you delete or replace some characters in the token, the response will be `"Token is not valid"`.
+
+## Dashboard route
+### Explanation
+<Callout type="info" emoji="ℹ️">
+    We have already implemented the dashboard route in the second lecture. It was missing the authorization middleware. Now, we are going to add it.
+</Callout>
+
+Adjust the dashboard route in the `dashboard.ts` file according to highlighted parts:
+```js filename="dashboard.ts" copy showLineNumbers {3,5}
+const router = require("express").Router();
+import pool from "../dbServer"
+import authorization from "../middleware/authorization";
+
+router.get("/", authorization, async (req, res) => {
+  try {
+    // req.user -> returns the object with id which represents userid in table
+    const user = await pool.query(
+      "SELECT firstname FROM useraccount WHERE password = $1",
+      [req.user.password]
+    );
+
+    res.json(user.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+module.exports = router;
+```
+### Test
+1. Same as in the `verify` route, retrieve a valid jwt token (you can use the same token as in the previous test, its expiration is currently set to 1h).
+2. In the `GET` request called `dashboard`, paste the token in the Body of the request in the token key.
+3. The response should be the user object with the firstname property.
+4. If you delete or replace some characters in the token, the response will be `"Token is not valid"`.
+
+## Summary
+In this lecture, we have implemented the handling of private routes with the help of the authorization middleware. 
+
+<Callout emoji="🎉">
+    Congratulations! You have successfully completed the backend part of the HackHealth app. Now, you can move on to the frontend part.
+</Callout>
+

@@ -4,5 +4,6 @@
   "server": "1. Server",
   "routes": "2. Routes",
   "jwtGenerator": "3. JWT Generator",
-  "middleware": "4. Middleware"
+  "middleware": "4. Middleware",
+  "privateRoutes": "5. Private Routes"
 }
