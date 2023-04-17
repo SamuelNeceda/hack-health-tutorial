@@ -25,14 +25,14 @@ is a very important task for any application. If the credentials are not secured
 </Callout>
 
 ## Demo
-1. In the root directory, run
+1. In the root directory, run:
 ```bash copy
 snyk code test
 ```
 Among the results, you should see also a medium severity vulnerability: `Use of Hardcoded Credentials`.
 
-2. We will move all hardcoded credentials into `.env` file as environment variables.
-3. In the `src/server/.env`, insert the following:
+2. We will use environment variables from `.env` file.
+3. It should already contain following values:
  ```bash filename=".env" copy showLineNumbers
 # Database configuration
 DB_HOST=localhost
@@ -42,35 +42,32 @@ DB_PASSWORD=postgres
 DB_NAME=hackhealthdb
 ```
 
-4. In the following files, replace the hardcoded credentials with environment variables: <br />
-**Files:**
-    * dbCreate.ts
-    * dbDrop.ts
-    * dbSeed.ts
-    * dbServer.ts
+4. In the file `dbServer.ts`, replace the hardcoded credentials with environment variables: <br />
+**It is already implemented in `dbCreate.ts`, `dbDrop.ts` and `dbSeed.ts`**
 
 <Callout emoji="💡">
     To read the environment variable from .env file, we are using a parser from `dotenv` package. It loads the environment variables from the .env file into the process.env object. We can access any environment variable using process.env.[ENV_VARIABLE_NAME].
 </Callout>
 
-**Example for dbDrop.ts:**
-```typescript filename="dbDrop.ts" copy showLineNumbers
-const dotenv = require('dotenv');
-const { Client } = require('pg');
+**Final implementation of `dbServer.ts`:**
+```typescript filename="dbServer.ts" copy showLineNumbers
+// Configure connection to database
 
-dotenv.config();
+import {Pool} from 'pg';
 
-const client = new Client({
+
+const pool = new Pool({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD
-});
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+})
 
-// rest of the code ...
+export default pool;
 ```
 
-5. After replacing the credentials with environment variables in all affected files, this vulnerability should be gone after running `snyk code test` again.
+5. After replacing the credentials with environment variables in affected file, this vulnerability should be gone after running `snyk code test` again.
 
 ## Prevention
 Credentials should never be hard-coded in the application. One of the practices is to use environment variables. Other ways to prevent this vulnerability are:
