@@ -1,0 +1,55 @@
+import {Callout} from 'nextra-theme-docs'
+import Image from 'next/image'
+
+## Install dependencies
+1. In the terminal, navigate to the **client** directory and run `npm install` to install all dependencies.
+2. After it is completed, do the same for the **server** directory.
+
+## Initialize Database
+For the database, we are using PostgreSQL. <br />
+The database server is already running on the VM, so we are just going to create the database and seed it with some data. <br />
+
+### Create a database
+
+In the terminal, run the following command:
+
+```bash copy
+npm run db-create
+```
+
+### Create tables and insert data
+
+Run the following command:
+
+```bash copy
+npm run db-seed
+```
+
+### Drop database
+
+If you corrupt the database and data in it during exposing the vulnerabilities, you can drop the database and create it
+again.
+Run the following command:
+
+```bash copy
+npm run db-drop
+```
+
+<Callout type="info" emoji="ℹ️">
+In case of need, to recreate the database, tables, and records, run `npm run db-create` and `npm run db-seed` commands.
+</Callout>
+
+### [Optional] Interact with the database
+
+<Callout emoji="💡">
+    1. To interact with the PostgreSQL database server, you can use `psql` CLI.
+    * You can type SQL commands to interact with the database, and it also provides meta-commands to interact with the
+    server.
+    2. Second option is to use preinstalled GUI tool called DBeaver, but we strongly recommend using `psql` CLI.
+    A tutorial for these two tools is not part of this tutorial, but there are many available online.
+</Callout>
+
+## Run the Application
+1. In the terminal, navigate to the server directory and run `npm run dev` to start the server.
+2. In another terminal, navigate to the client directory and run `npm start` to start the client.
+3. Open the browser and navigate to `http://localhost:3001` and familiarize yourself with the application.

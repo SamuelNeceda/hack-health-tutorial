@@ -2,6 +2,25 @@ import {Callout} from 'nextra-theme-docs'
 
 # Repository
 
+## Connect to GitLab
+In the next steps, we will need to clone a repository from GitLab. To do so, you need to connect to GitLab from a VM:
+1. Open the terminal in the VM 
+2. Create a folder to store your project: `mkdir HackHealth`
+3. Go to the folder: `cd HackHealth`
+4. Run `ssh-keygen` and press enter to accept the default values
+5. Run `cat ~/.ssh/id_rsa.pub` and copy the output
+6. Go to [GitLab](https://git.kpi.fei.tuke.sk) and log in
+7. Go to your profile settings ("Preferences")
+8. Go to SSH Keys
+9. Insert the copied key into the "Key" field and click "Add key"
+10. Back in the terminal, run the following commands:
+```bash copy
+git config --global user.name "Your Name"
+```
+```bash copy
+git config --global user.email "your.email@student.tuke.sk"
+```
+
 ## Choose a repository
 
 There are two repositories available for you.
@@ -18,12 +37,13 @@ Open them in the web browser inside VM.
     help you with identifying the vulnerabilities in the cybersecurity section. If you want to skip the first part and jump directly to the cybersecurity section, you can jump directly after this lecture to lecture [🕵🏼‍♂️Cybersecurity](/cybersecurity/codeAnalysis).
 </Callout>
 
-
-## Clone repository
+## Fork and Clone repository
 
 1. Fork the repository to create your own copy in your personal/university GitLab account.
-2. Clone the repository to your local machine, in this case, to the VM. You can store it /home/hacker/Documents/Github, which is already prepared for you.
-
+2. Clone the repository to your local machine, in this case, to the VM. You can use the following command:
+```bash copy
+git clone "repository url"
+```
 <Callout emoji="💡">
     You are more than welcome to contribute to the repository.
     If you find any mistakes, or you want to improve the tutorial, you can create a merge request to the original
@@ -45,17 +65,3 @@ For version control, you can use preinstalled GitHub Desktop or git CLI supporte
     * For the purpose of this tutorial, WebStorm will be used as a demonstration IDE.
 2. When using WebStorm, make sure to log in to your JetBrains free student account to get access to all features.
 3. You can also import your predefined settings from your JetBrains account.
-
-## Install dependencies
-
-1. In the IDE, open the terminal.
-2. Run `npm install` to install all dependencies.
-
-## First walkaround...
-
-<Callout type="info" emoji="ℹ️">
-  What you can see is a skeleton of the web app, which is not yet functional.
-Some parts are already implemented, some are missing and others are commented out.
-Your task is to implement the missing parts and uncomment the commented-out parts by following the tutorial.
-Let's get started!
-</Callout>

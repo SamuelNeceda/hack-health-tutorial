@@ -1,5 +1,6 @@
 {
   "intro": "Intro",
+  "init": "Init",
   "codeAnalysis": "Static Code Analysis",
   "essentialTools": "Tools",
   "a01": "A01 Broken Access Control",
