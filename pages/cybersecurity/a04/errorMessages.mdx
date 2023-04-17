@@ -16,13 +16,13 @@ For the information about **Insecure Design**, visit [page](https://owasp.org/To
 One of the most common, and on the other hand easily prevented vulnerabilities related to Insecure design is the generation of error messages containing sensitive information. This vulnerability is related to the fact that the application generates error messages that contain some kind of information, which can be used as a hint for an attacker to execute a more serious attack. It can have many forms and severities, we will demonstrate one of them in this example.
 
 ## Demo
-In the login screen of the web app, enter the valid username and invalid password. What message is displayed?
+In the login screen of the web app, enter the valid username and invalid password. What message is displayed in error notification?
 
 ```
 Invalid password.
 ```
 
-Now, enter the invalid username and valid/invalid password. The message being displayed is:
+Now, enter the invalid username and valid/invalid password. The notification being displayed is:
 ```
 Invalid username.
 ```

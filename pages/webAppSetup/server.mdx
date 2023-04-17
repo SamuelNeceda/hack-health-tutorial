@@ -64,9 +64,9 @@ After running the command `npm run dev`, the server should start and you should 
 ## Database
 
 For the database, we are using PostgreSQL. <br />
-The database server is already running on the VM, so we are just going to create the database and seed it with some data. <br />
-<br />
-**Before running following commands, terminate (CTRL + C) the running server in the terminal.** <br />
+The database server is already running on the VM, so we are just going to create the database, tables and seed the tables with some data. <br />
+
+**Before running following commands, terminate (CTRL + C) the running server in the terminal and insert the commands in the server directory** <br />
 
 ### Create a database
 
@@ -88,14 +88,16 @@ npm run db-seed
 
 If you corrupt the database and data in it during exposing the vulnerabilities, you can drop the database and create it
 again.
-Run the following command:
+<Callout type="warning" emoji="⚠️">
+    Do not run this command now, because it will erase everything you just created.
+</Callout>
 
 ```bash copy
 npm run db-drop
 ```
 
 <Callout type="info" emoji="ℹ️">
-In case of need, to recreate the database, tables, and records, run `npm run db-create` and `npm run db-seed` commands.
+In case of need, to recreate the database, tables, and records, run `npm run db-drop`, `npm run db-create` and `npm run db-seed` commands.
 </Callout>
 
 ### [Optional] Interact with the database

@@ -29,7 +29,7 @@ In this demo, we will demonstrate that the HackHealth app does not have any prev
 
 1. Navigate to the HackHealth login screen.
 2. Open Burp Suite and if not already set up, follow the [🛡️tutorial](/cybersecurity/tools/burpsuite).
-3. Turn on `Intercept` in Burp Suite.
+3. In the `Proxy` tab, turn on `Intercept`.
 4. In the HackHealth app, try to log in with a valid user and invalid password. <br/>
 **email**: samuel.neceda@gmail.com <br/>
 **password**: invalid <br/>
@@ -115,6 +115,9 @@ This code will block the user after 5 failed attempts for 30 seconds and then wi
 </Callout>
 
 3. Now, all you need to do is to import the `bruteforce` variable and use it as middleware in the `src/server/src/routes/jwtAuth.ts` file and add it to the `login` route.
+```js filename="bruteforcePrevention.ts" copy showLineNumbers
+import bruteforce from "../middleware/bruteforcePrevention";
+```
 ```js filename="jwtAuth.ts"  copy showLineNumbers
 router.post("/login", bruteforce.prevent, inputValidation, async (req, res) => {
     // rest of the code

@@ -29,13 +29,13 @@ router.post("/login", bruteforce.prevent, async (req, res) => {
         );
 
         if (user?.rows?.length === 0 || user?.length === 0) {
-            return res.status(401).json({message: "Invalid email or password.", user: user});
+            return res.status(401).json({message: "Invalid email.", user: user});
         }
 
         const validPassword = password === user.rows[0].password;
 
         if (!validPassword) {
-            return res.status(401).json({message: "Invalid email or password.", user: user});
+            return res.status(401).json({message: "Invalid password.", user: user});
         }
 
         const token = generateJWT(user.rows[0].password);
@@ -73,7 +73,7 @@ Firstly, we are going to gather some internal information about the database and
 ```
 * After digging deeper into the servers response, in `user.rows`, you will see the name of the database: `hackhealthdb` <br />
 #### **Names of tables** <br />
-* In the same way as in the previous step, we can get the name of the database by inserting the following code into the email field.
+* In the same way as in the previous step, we can get the names of the tables by inserting the following code into the email field.
 ```sql copy
 '; SELECT table_name FROM information_schema.tables WHERE table_schema='public'; --
 ```

@@ -77,11 +77,7 @@ The video below shows the attack and monitoring tools in action. <br />
 ## Prevention
 The best way to prevent such an attack is to implement a proper logging system. This way, you can detect any suspicious activity and take action to prevent it. <br />
 In the HackHealth application, we are going to use the `winston` package to implement a logging system. <br />
-1. Install `winston` package
-  ```bash
-  npm install winston
-  ```
-2. Create a new file `logger.js` in the `utils` folder and add the following code:
+1. Create a new file `logger.js` in the `utils` folder and add the following code:
 ```js filename="logger.ts" copy showLineNumbers
 // Import necessary packages from Winston and related libraries
 import {createLogger, format, transports} from 'winston';

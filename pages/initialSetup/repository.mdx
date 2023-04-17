@@ -3,12 +3,21 @@ import {Callout} from 'nextra-theme-docs'
 # Repository
 
 ## Connect to GitLab
-In the next steps, we will need to clone a repository from GitLab. To do so, you need to connect to GitLab from a VM:
+In the next steps, you will need to clone a repository from GitLab. To do so, you firstly need to connect to your GitLab account from a VM:
 1. Open the terminal in the VM 
 2. Create a folder to store your project: `mkdir HackHealth`
 3. Go to the folder: `cd HackHealth`
-4. Run `ssh-keygen` and press enter to accept the default values
-5. Run `cat ~/.ssh/id_rsa.pub` and copy the output
+4. Run the following command and press enter to accept the default values
+<Callout emoji="💡">
+    When pasting the command into the terminal, use Ctrl + Shift + V shortcut to paste the command without formatting.
+</Callout>
+```bash copy
+ssh-keygen
+```
+5. Run the following command and copy the output
+```bash copy
+cat ~/.ssh/id_rsa.pub
+```
 6. Go to [GitLab](https://git.kpi.fei.tuke.sk) and log in
 7. Go to your profile settings ("Preferences")
 8. Go to SSH Keys
@@ -40,11 +49,13 @@ Open them in the web browser inside VM.
 
 ## Fork and Clone repository
 
-1. Fork the repository to create your own copy in your personal/university GitLab account.
-2. Clone the repository to your local machine, in this case, to the VM. You can use the following command:
+1. Fork the repository to create your own copy in your university GitLab account.
+2. Clone the repository to the VM, to the folder called `HackHealth` you created in the previous step. Use the following command:
 ```bash copy
 git clone "repository url"
 ```
+3. Type `yes` to the prompt and press enter.
+4. After the clone is finished, after running `ls` command, you should see the repository folder in the `HackHealth` folder.
 <Callout emoji="💡">
     You are more than welcome to contribute to the repository.
     If you find any mistakes, or you want to improve the tutorial, you can create a merge request to the original

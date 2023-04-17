@@ -6,7 +6,7 @@ Check out to the branch called `0_init`. <br />
 ```bash copy
 git checkout 0_init
 ```
-This branch only contains separate folders to divide the logic and implementation for the client and server. It already contains the `.gitignore` file and README.md files, so you do not have to worry about it.
+This branch only contains folder for defining the logic and implementation for the server-side. It already contains the `.gitignore` file and `README.md` files, so you do not have to worry about them.
 
 ## Initialization of server-side
 Navigate to the `server` folder in the terminal. <br />
@@ -20,8 +20,8 @@ This will create a default `package.json` file in the `server` folder. It contai
 
 ### Packages
 
-To meet our needs, we need to modify the `package.json` file. <br />
-Replace the content of the file with the following code:
+To meet our needs, we need to modify just created `package.json` file. <br />
+**Replace the content of the file with the following code:**
 ```json filename="package.json" copy showLineNumbers
 {
   "name": "hack-health",
@@ -79,15 +79,15 @@ Replace the content of the file with the following code:
   }
 }
 ```
-* For your convenience, it already contains all the dependencies you should need during development and also scripts. In case you will need some other packages, you can just install them
-* Now, run `npm i` in the terminal, this command will install all the dependencies and also creates a `node_modules` folder, along with a `package-lock.json` file.
+* For your convenience, it already contains all the dependencies you should need during development and also scripts. In case you will need some other packages, you can just install them.
+* Now, run `npm i` in the terminal. This command will install all the dependencies and also creates a `node_modules` folder, along with a `package-lock.json` file.
 
 ### TypeScript compiler
 * Now, we are going to create a new file called `tsconfig.json` in the `server` folder. 
 <Callout type="info" emoji="ℹ️">
 The tsconfig.json file is a configuration file used in TypeScript projects to define various settings for the TypeScript compiler. By defining these settings, developers can ensure that their TypeScript projects are compiled consistently and with the desired settings, regardless of the development environment.
 </Callout>
-* Paste the following to it:
+* Paste the following lines to it:
 ```json filename="tsconfig.json" copy showLineNumbers
 {
   "compilerOptions": {
@@ -321,7 +321,7 @@ client.query(dropDbSQL, (err) => {
 });
 ```
 
-* Also, create a file called .env in the server directory, to store the environment variables. The file should look like this:
+* Also, create a file called `.env` in the server directory, to store the environment variables. The file should look like this:
 ```js filename=".env" copy showLineNumbers
 # Database configuration
 DB_HOST=localhost

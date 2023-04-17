@@ -17,6 +17,8 @@ It means that if you hit the `/auth` route, it will go to the `jwtAuth.ts` file.
 Now, we are going to build the register route step by step and the whole code will be presented at the end of this section. The basic idea is that in the final app, the user will enter the values to the form and the form will be sent in the POST request to the `/register` endpoint in JSON format. Then, it will be evaluated and if everything is ok, the user will be inserted into the database and authorized.
 </Callout>
 
+**Final implementation will be presented later, so you do not need to copy the code snippets one by one.** <br />
+
 When the JSON from the client side is received, we need to destructure it and get the values from the request body. <br />
 ```js filename="index.ts" copy showLineNumbers
 import {Router} from "express";
@@ -146,7 +148,7 @@ module.exports = router;
 ```
 
 ### Connection to database 
-When we want to make queries to the database, we also need to define the logic in the `dbServer.ts` file located in the same hierarchy as `index.ts` file
+When we want to make queries to the database, we also need to define the logic in the `dbServer.ts` file located in the same hierarchy as `index.ts` file. <br />Create the file and insert the following code to it:
 ```js filename="dbServer.ts" copy
 // Configure connection to database
 
@@ -174,7 +176,7 @@ export default pool;
 The login route accepts a **POST request** to the `/login` endpoint and expects the email and password properties in the request body. <br />
 The route first queries the useraccount table for a user with the provided email address. If no user is found, the route returns an error. If a user is found, the route compares the provided password with the stored password. If the passwords match, the route returns a success message indicating that authentication was successful. <br />
 
-Paste the following code into the `jwtAuth.ts` file. <br />
+Paste the following code into the `jwtAuth.ts` file after the implementation of  `register` route. <br />
 ```js filename="jwtAuth.ts" copy showLineNumbers
 // LOGIN
 router.post("/login", async (req, res) => {
@@ -242,10 +244,10 @@ router.get("/", async (req, res) => {
 module.exports = router;
 ```
 <Callout type="info" emoji="ℹ️">
-The route handler queries a PostgreSQL database using the pool object to select the firstname column from the useraccount table where the password column matches the password of the authenticated user. The req.user object is expected to contain an id property that represents the ID of the authenticated user in the table.
-<br />
-If the query is successful, the route handler sends a JSON response containing the firstname of the user as the body of the response. The res.json method sends a JSON response to the client and automatically sets the appropriate Content-Type header in the response.
-<br />
+The route handler queries a PostgreSQL database using the pool object to select the firstname column from the useraccount table where the password column matches the password of the authenticated user. The req.user object is expected to contain an id property that represents the ID of the authenticated user in the table.<br />
+
+If the query is successful, the route handler sends a JSON response containing the firstname of the user as the body of the response. The res.json method sends a JSON response to the client and automatically sets the appropriate Content-Type header in the response.<br />
+
 The router object is exported from the module so that it can be mounted to the appropriate URL path in the main application file using the app.use method.
 </Callout>
 
