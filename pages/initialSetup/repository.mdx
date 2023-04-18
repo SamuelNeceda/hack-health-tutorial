@@ -1,8 +1,45 @@
 import {Callout} from 'nextra-theme-docs'
+import { Tab, Tabs } from 'nextra-theme-docs'
 
 # Repository
 
-## Connect to GitLab
+Choose a repository management platform that is more convenient for you. You can use either GitHub or GitLab. Github is presented by default, but you can switch to GitLab by clicking on the GitLab tab.
+<Tabs items={['GitHub', 'GitLab']} defaultIndex="0">
+  <Tab>
+    ## GitHub
+There are two repositories available for you.
+Open them in the web browser inside VM.
+
+1. [repository](https://github.com/SamuelNeceda/web_app) contains all the necessary steps for creating a simple monorepo web app using **PERN stack** (PostgreSQL, Express, React, Node.js). You will learn how to create the vulnerable web app from scratch, and it will help you with identifying the vulnerabilities later on. For your convenience, individual lectures have a corresponding branch in the repository, so even if you miss some parts, you can always catch up.
+2. [repository](https://github.com/SamuelNeceda/cybersecurity) contains the final version of the vulnerable web app, in which you can expose the vulnerabilities and fix them afterward. 
+
+<Callout type="warning" emoji="⚠️">
+    It is strongly recommended to start with the 1. [
+    repository](https://github.com/SamuelNeceda/web_app), because you will learn how to
+    create the vulnerable web app from
+    scratch, and it will
+    help you with identifying the vulnerabilities in the cybersecurity section. If you want to skip the first part and jump directly to the cybersecurity section, you can jump directly after this lecture to lecture [🕵🏼‍♂️Cybersecurity](/cybersecurity/codeAnalysis).
+</Callout>
+
+### Clone repository
+1. Open the terminal in the VM 
+2. Create a folder to store your project: `mkdir HackHealth`
+3. Go to the folder: `cd HackHealth`
+4. Clone the repository to the VM, to the folder called `HackHealth` you created in the previous step. Use the following command:
+```bash copy
+git clone "repository url"
+```
+5. After the clone is finished, after running `ls` command, you should see the repository folder in the `HackHealth` folder.
+<Callout emoji="💡">
+    You are more than welcome to contribute to the repository.
+    If you find any mistakes, or you want to improve the tutorial, you can create a merge request to the original
+    repository.
+    It will be reviewed and merged if valid, or the maintainer will request the changes.
+</Callout>
+  </Tab>
+  <Tab>
+    ## GitLab
+### Connect to GitLab
 In the next steps, you will need to clone a repository from GitLab. To do so, you firstly need to connect to your GitLab account from a VM:
 1. Open the terminal in the VM 
 2. Create a folder to store your project: `mkdir HackHealth`
@@ -31,7 +68,7 @@ git config --global user.name "Your Name"
 git config --global user.email "your.email@student.tuke.sk"
 ```
 
-## Choose a repository
+### Choose a repository
 
 There are two repositories available for you.
 Open them in the web browser inside VM.
@@ -47,7 +84,7 @@ Open them in the web browser inside VM.
     help you with identifying the vulnerabilities in the cybersecurity section. If you want to skip the first part and jump directly to the cybersecurity section, you can jump directly after this lecture to lecture [🕵🏼‍♂️Cybersecurity](/cybersecurity/codeAnalysis).
 </Callout>
 
-## Fork and Clone repository
+### Fork and Clone repository
 
 1. Fork the repository to create your own copy in your university GitLab account.
 2. Clone the repository to the VM, to the folder called `HackHealth` you created in the previous step. Use the following command:
@@ -62,6 +99,13 @@ git clone "repository url"
     repository.
     It will be reviewed and merged if valid, or the maintainer will request the changes.
 </Callout>
+  </Tab>
+</Tabs>
+
+
+
+
+
 
 ## Version control
 
