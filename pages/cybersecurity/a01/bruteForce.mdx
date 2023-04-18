@@ -84,7 +84,7 @@ We will implement protection against brute force attacks in the HackHealth app s
     learning ...
 </Callout>
 
-1. In the `src/server/src/middleware` create a new file called `bruteforcePrevention.ts`
+1. In the `server/src/middleware` create a new file called `bruteforcePrevention.ts`
 2. Insert the following code into the file:
 ```js filename="bruteforcePrevention.ts" copy showLineNumbers
 const expressBrute = require("express-brute");
@@ -114,8 +114,8 @@ This code will block the user after 5 failed attempts for 30 seconds and then wi
     This will make it harder for attackers to predict and plan the next attacks on the system.
 </Callout>
 
-3. Now, all you need to do is to import the `bruteforce` variable and use it as middleware in the `src/server/src/routes/jwtAuth.ts` file and add it to the `login` route.
-```js filename="bruteforcePrevention.ts" copy showLineNumbers
+3. Now, all you need to do is to import the `bruteforce` variable and use it as middleware in the `server/src/routes/jwtAuth.ts` file and add it to the `login` route.
+```js filename="jwtAuth.ts" copy showLineNumbers
 import bruteforce from "../middleware/bruteforcePrevention";
 ```
 ```js filename="jwtAuth.ts"  copy showLineNumbers

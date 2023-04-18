@@ -20,7 +20,7 @@ Now, we are going to build the register route step by step and the whole code wi
 **Final implementation will be presented later, so you do not need to copy the code snippets one by one.** <br />
 
 When the JSON from the client side is received, we need to destructure it and get the values from the request body. <br />
-```js filename="index.ts" copy showLineNumbers
+```js filename="jwtAuth.ts" copy showLineNumbers
 import {Router} from "express";
 
 const router = Router();
@@ -49,7 +49,7 @@ Then, in the highlighted try-catch block, we are going to query the database to 
 If the user is already registered, we will send an error message.
 
 
-```js filename="index.ts" copy showLineNumbers {22-31}
+```js filename="jwtAuth.ts" copy showLineNumbers {22-31}
 import {Router} from "express";
 import pool from "../dbServer";
 
@@ -87,7 +87,7 @@ module.exports = router;
 
 In the next and **final section**, we are going to insert the user into the database, return the response or throw an error when something during an execution goes wrong.
 
-```js filename="index.ts" copy showLineNumbers {32-55}
+```js filename="jwtAuth.ts" copy showLineNumbers {32-55}
 import {Router} from "express";
 import pool from "../dbServer";
 
@@ -165,11 +165,26 @@ const pool = new Pool({
 
 export default pool;
 ```
-
-<Callout emoji="💡">
-    Now, start the server by running `npm run dev` and open Postman by running `Postman` in the terminal of the virtual machine. You can try a predefined request to `register` endpoint. <br />
-    As a result, you should get status code **200** and **"success": true**
-</Callout>
+ ### Test
+* Start the server by running `npm run dev` and open Postman by running `Postman` in the terminal of the virtual machine.
+* In the Postman, you should open the `HackHealth` collection, which already contains some predefined requests.
+* You can try a predefined request called `registration` to **register** endpoint. <br />
+**The body of the request should look like this:**
+```json copy
+{   
+    "email": "will.doe@outlook.com",
+    "password": "qwerty1234",
+    "firstname": "Will",
+    "lastname": "Doe",
+    "title": "Ing.",
+    "birthdate": "1972-08-06",
+    "phone": "+421905524887",
+    "sex": "M",
+    "status": "patient",
+    "birthnumber": "482559/5997"
+}
+```
+* As a result of sending this **POST** request to running server, you should get status code **200** and **"success": true**
 
 ## Login route
 **The implementation of the `login` route is very analogous to the `register` route.**
@@ -210,7 +225,15 @@ router.post("/login", async (req, res) => {
 ```
 
 <Callout emoji="💡">
-    Similarly, as `register` route, you can test `login` route using a predefined request in Postman. You can try to log in with the email and password of the user you have just registered. <br />
+    * Similarly, as `register` route, you can test `login` route using a predefined request in Postman (the name of the **POST** request is `login`). 
+    * You can try to log in with the email and password of the user you have just registered. <br />
+    * **Replace the current JSON body with the following:**
+    ```json copy
+    {
+        "email": "will.doe@outlook.com",
+        "password": "qwerty1234"
+    }
+```
     As a result, you should get status code **200** and JSON object with **"success": true** and **"message": "Authentication successful!"**
 </Callout>
 

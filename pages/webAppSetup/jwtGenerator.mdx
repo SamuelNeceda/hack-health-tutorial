@@ -25,7 +25,7 @@ When a user logs into an application, a JWT is generated on the server and sent 
 ### Password
 Firstly, we need to define a password that will be used to sign the token. We will use the `JWT_SECRET` environment variable for that. <br />
 Paste the following code in the `.env` file:
-```bash
+```js filename=".env" copy showLineNumbers
 # Authentication configuration
 JWT_SECRET=VeryWeakSecret123-
 ```
@@ -125,7 +125,7 @@ In this modification, jwt token will be generated based on user`s password and i
 ## Encryption of passwords
 As you might notice, currently we store passwords just as plain text. Now, we are going to implement a better solution (but keep in mind, better does not mean the best)
 1. In the `jwtAuth.ts` file, import:
-```bash
+```bash filename="jwtAuth.ts" copy showLineNumbers
 import bcrypt from "bcrypt";
 ```
 2. Make the adjustments in the register route according to the highlighted lines:
