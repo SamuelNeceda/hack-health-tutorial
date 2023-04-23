@@ -161,7 +161,7 @@ import bcrypt from "bcrypt";
 </Callout>
 
 ## Decryption of passwords
-When the user`s password is stored in the database in an encrypted, we need to compare it with the plaintext password entered when logging in. <br />
+When the user\`s password is stored in the database as encrypted, we need to compare it with the plaintext password entered when logging in. <br />
 Replace one line of assigning value to `const validPassword` in the login route handling as:
 ```js filename="jwtAuth.ts" copy showLineNumbers
 const validPassword = await bcrypt.compare(password, user.rows[0].password);

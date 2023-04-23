@@ -2,14 +2,14 @@ import {Callout} from 'nextra-theme-docs'
 import Image from 'next/image'
 
 ## Intro
-In this lecture, we are going to go through the initial setup of React application. This requires a lot of setup and configuration, so the aim of this lecture is not to force you to do it all by yourself. We will go through all the steps and the final code is available on the branch called `6_client`, which will be used as a starting point.
+In this lecture, we are going to go through the initial setup of **React application**. This requires a lot of setup and configuration, so the aim of this lecture is not to force you to do it all by yourself. We will go through all the steps and the final code is available on the branch called `6_client`, which will be used as a starting point.
 
 ## Create React App
-* Navigate to the `client` folder
-* Run `npx create-react-app .` to create a new React application in the current folder <br />
-    This command will create a basic skeleton of a React application, including all the default dependencies and configuration files.
+<Callout emoji="💡">
+    When you would like to create a React app from scratch, you would navigate to the `client` folder and run `npx create-react-app .` command. This command would create a basic skeleton of a React application, including all the default dependencies and configuration files. <br />
+    **But, we need to do some adjustments to the default configuration to meet our specific needs, so we will not use this command. You should just check out to the branch called `6_client` and in the next part, we will go through all the adjustments we made and you can follow that also by looking at the code in the `client` folder.**
+</Callout>
 ### Adjustments
-We are going to adjust predefined configurations and files to meet our specific needs.
 * We have adjusted `README.md` and `package.json` file to include all the packages you should need during the course.
 * We have deleted files: `App.test.js`, `logo.svg`, `reportWebVitals.js`, `setupTests.js` because we do not need them.
 * `index.css` file contains all the styling for the React app. We have added some basic styling to the app, which will be used later.
@@ -21,7 +21,6 @@ In general, the index.html file defines the basic structure and content of a web
 To original `index.html` file, we have added an additional stylesheet link that references a **Bootstrap CSS file**. This means that we can use Bootstrap components in our React app.
 
 ## Run the app
-Check out to the branch called `6_client` which already contains the adjusted skeleton for the React app.
 1. Run `npm install` to install all the dependencies.
 2. Run `npm start` to start the React app. You should see the following screen in your browser:
 <Image src="/webApp/react_app.png" alt="Project structure" width={1000} height={300}/>
