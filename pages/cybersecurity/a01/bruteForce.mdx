@@ -1,43 +1,57 @@
-import {Callout} from 'nextra-theme-docs'
-import Image from 'next/image'
+import { Callout } from "nextra-theme-docs";
+import Image from "next/image";
 
 # A01:2021 - Broken Access Control
+
 Broken Access Control (BAC) represents the most serious risk based on the OWASP Top 10:2021. As a source of vulnerabilities of this type, it
 was found in up to **94.5%** of the tested applications.
 
 <Callout type="info" emoji="ℹ️">
-For the information about **Broken Access Control**, visit [page](https://owasp.org/Top10/A01_2021-Broken_Access_Control/)
+  For the information about **Broken Access Control**, visit
+  [page](https://owasp.org/Top10/A01_2021-Broken_Access_Control/)
 </Callout>
 
 # Brute Force
+
 <Callout type="warning" emoji="🔍">
   **CWE-307**: Improper Restriction of Authentication Attempts <br />
-    Can be considered a vulnerability under both "A1 Broken Access Control" and "A7 Identification and Authentication Failures" categories, as they relate to weak or inadequate controls for managing access to a system or application.
+  Can be considered a vulnerability under both "A1 Broken Access Control" and "A7
+  Identification and Authentication Failures" categories, as they relate to weak
+  or inadequate controls for managing access to a system or application.
 </Callout>
 
 ## About
+
 A brute force attack is a type of attack where the attacker tries to guess the password by trying all possible combinations from the given set.
 If your web app requires user authentication, you are a possible target for this type of attack.
 How good a target you are will only become apparent based on how aware you are of this vulnerability and what authentication methods you have implemented.
 Some basic types of brute force attacks:
+
 - **Dictionary attack** - attacker tries to guess the password by trying all possible combinations from the given set.
 - **Rainbow table attack** - attacker tries to guess the password by using precomputed hashes from the given set.
 
-
 ## Attack
+
 In this demo, we will demonstrate that the HackHealth app does not have any prevention from dictionary brute force attacks.
 
 1. Navigate to the HackHealth login screen.
-2. Open Burp Suite and if not already set up, follow the [🛡️tutorial](/cybersecurity/tools/burpsuite).
+2. Open Burp Suite and if not already set up, follow the [🛡️tutorial](/cybersecurity/essentialTools/burpsuite).
 3. In the `Proxy` tab, turn on `Intercept`.
 4. In the HackHealth app, try to log in with a valid user and invalid password. <br/>
-**email**: samuel.neceda@gmail.com <br/>
-**password**: invalid <br/>
+   **email**: samuel.neceda@gmail.com <br/>
+   **password**: invalid <br/>
 5. In Burp Suite\`s `HTTP history` tab, the last request should be the POST request to the login endpoint.
-If not, click `Forward` button in Proxy tab to forward the request to the server.
+   If not, click `Forward` button in Proxy tab to forward the request to the server.
 6. Right-click on it and select `Send to Intruder`.
-<Image src="/burpSuite/burp_intruder.png" alt="Burp intruder" width={1000} height={300}/>
-According to an image, you can see parameters that are included in the request and response. <br/>
+
+   <Image
+     src="/burpSuite/burp_intruder.png"
+     alt="Burp intruder"
+     width={1000}
+     height={300}
+   />
+   According to an image, you can see parameters that are included in the request
+   and response. <br />
 
 7. Message was sent to the `Intruder` tool. In the Intruder tab, you can see the request which was sent to the server.
 8. As you can see, payload positions are marked with green color and $ sign.
@@ -46,91 +60,118 @@ According to an image, you can see parameters that are included in the request a
 11. Keep the default attack type `Sniper`.
 12. In the `Payloads` tab, load the values for passwords from `/home/hacker/resources/` in the `Payload Options` section.
 
-<Image src="/burpSuite/burp_list.png" alt="Burp list" width={700} height={300}/>
+<Image
+  src="/burpSuite/burp_list.png"
+  alt="Burp list"
+  width={700}
+  height={300}
+/>
 
 <Callout emoji="💡">
-    We will be using a set of 100 commonly used weak passwords. There are many other sets, which contains a huge amount of
-    commonly used or leaked usernames and passwords.
-    For usernames, you can use [SecLists](https://github.com/danielmiessler/SecLists) set, and for passwords
-    [rockyou](https://github.com/josuamarcelc/common-password-list). Kali Linux also provides some password dictionary
-    files as part of its standard installation.
+  We will be using a set of 100 commonly used weak passwords. There are many
+  other sets, which contains a huge amount of commonly used or leaked usernames
+  and passwords. For usernames, you can use
+  [SecLists](https://github.com/danielmiessler/SecLists) set, and for passwords
+  [rockyou](https://github.com/josuamarcelc/common-password-list). Kali Linux
+  also provides some password dictionary files as part of its standard
+  installation.
 </Callout>
 
 13. Now, we will start the attack. Click `Start Attack` button.
-During the attack, every password from the list will be tried against the email and you can see progress in the Progress bar at the bottom of the window.
+    During the attack, every password from the list will be tried against the email and you can see progress in the Progress bar at the bottom of the window.
 14. After the attack is finished, important information for us are `Status` codes. Also, when clicking on each row with a password, we can see at the bottom the request and response of the server. <br />
-**Status codes**:
+    **Status codes**:
+
 - **200** - password is correct
 - **401** - password is incorrect
+
 15. We can sort the table by `Status` column and see that the first row with `Status` 200 is the correct password.
-**password**: secret
-<Image src="/burpSuite/burp_succ.png" alt="Burp success" width={1000} height={300}/>
+    **password**: secret
+
+    <Image
+      src="/burpSuite/burp_succ.png"
+      alt="Burp success"
+      width={1000}
+      height={300}
+    />
 
 16. **Attack was successful!** <br />
-In the HackHealth app, you can try to log in with obtained password and verify you can access the dashboard.
+    In the HackHealth app, you can try to log in with obtained password and verify you can access the dashboard.
 
 <Callout emoji="💡">
-    The `Intruder` tool in Burp Suite is not the best tool for brute force attacks, but it is easy to use with good
-    documentation and very detailed results.
-    Also, some functionalities are disabled and attacks are time throttled in the Community version. Another great tool
-    serving this purpose is **Hydra**, which is more powerful and is also preinstalled in Kali Linux.
+  The `Intruder` tool in Burp Suite is not the best tool for brute force
+  attacks, but it is easy to use with good documentation and very detailed
+  results. Also, some functionalities are disabled and attacks are time
+  throttled in the Community version. Another great tool serving this purpose is
+  **Hydra**, which is more powerful and is also preinstalled in Kali Linux.
 </Callout>
 
 ## Prevention
+
 We will implement protection against brute force attacks in the HackHealth app source code using [express-brute](https://www.npmjs.com/package/express-brute) package.
+
 <Callout type="info" emoji="ℹ️">
-    As you will found out in [❕A06: Vulnerable and Outdated components](/cybersecurity/a06/vulPackages), using this package is
-    not the most optimal solution, but as you are aware, the process of development is about constant improvements and
-    learning ...
+  As you will found out in [❕A06: Vulnerable and Outdated
+  components](/cybersecurity/a06/vulPackages), using this package is not the
+  most optimal solution, but as you are aware, the process of development is
+  about constant improvements and learning ...
 </Callout>
 
 1. In the `server/src/middleware` create a new file called `bruteforcePrevention.ts`
 2. Insert the following code into the file:
+
 ```js filename="bruteforcePrevention.ts" copy showLineNumbers
 const expressBrute = require("express-brute");
 
 const store = new expressBrute.MemoryStore();
 const bruteforce = new expressBrute(store, {
-    freeRetries: 4,
-    minWait: 0.5 * 60 * 1000,
-    maxWait: 0.5 * 60 * 1000,
-    lifetime: 24 * 60 * 60,
-    failCallback: function (req, res, next, nextValidRequestDate) {
-        const nextValidRequestTime = nextValidRequestDate.toLocaleTimeString();
-        res.status(429).json({
-            success: false,
-            message: 'Too many failed attempts, please try again after 30 seconds at ' + nextValidRequestTime,
-            nextValidRequestDate: nextValidRequestDate.toLocaleString()
-        });
-    }
+  freeRetries: 4,
+  minWait: 0.5 * 60 * 1000,
+  maxWait: 0.5 * 60 * 1000,
+  lifetime: 24 * 60 * 60,
+  failCallback: function (req, res, next, nextValidRequestDate) {
+    const nextValidRequestTime = nextValidRequestDate.toLocaleTimeString();
+    res.status(429).json({
+      success: false,
+      message:
+        "Too many failed attempts, please try again after 30 seconds at " +
+        nextValidRequestTime,
+      nextValidRequestDate: nextValidRequestDate.toLocaleString(),
+    });
+  },
 });
 
 export default bruteforce;
 ```
 
 This code will block the user after 5 failed attempts for 30 seconds and then will be blocked for every failed attempt.
+
 <Callout emoji="💡">
-    Change the displayed message to be more generic and do not include the time when the user will be able to try again.
-    This will make it harder for attackers to predict and plan the next attacks on the system.
+  Change the displayed message to be more generic and do not include the time
+  when the user will be able to try again. This will make it harder for
+  attackers to predict and plan the next attacks on the system.
 </Callout>
 
 3. Now, all you need to do is to import the `bruteforce` variable and use it as middleware in the `server/src/routes/jwtAuth.ts` file and add it to the `login` route.
+
 ```js filename="jwtAuth.ts" copy showLineNumbers
 import bruteforce from "../middleware/bruteforcePrevention";
 ```
+
 ```js filename="jwtAuth.ts"  copy showLineNumbers
 router.post("/login", bruteforce.prevent, inputValidation, async (req, res) => {
-    // rest of the code
-    });
+  // rest of the code
+});
 ```
 
 ## Verification
+
 Try to start an attack again with the same properties as before. In the attack progress, you should see that only the first five requests were processed and the rest were blocked.
 After 30 seconds, new requests will be processed, and so on. We can conclude, that we have successfully implemented simple protection against brute force attacks and we are now ready to move on to the next topic.
 
-
 ## Sources
-* https://owasp.org/www-community/controls/Blocking_Brute_Force_Attacks
-* https://pentestlab.blog/2012/09/10/password-list-for-penetration-testing/
-* https://portswigger.net/burp/documentation/desktop/tutorials/brute-forcing-a-login-using-burp-intruder
-* https://www.youtube.com/watch?v=-CMBoJ60K1A&t=949s
+
+- https://owasp.org/www-community/controls/Blocking_Brute_Force_Attacks
+- https://pentestlab.blog/2012/09/10/password-list-for-penetration-testing/
+- https://portswigger.net/burp/documentation/desktop/tutorials/brute-forcing-a-login-using-burp-intruder
+- https://www.youtube.com/watch?v=-CMBoJ60K1A&t=949s

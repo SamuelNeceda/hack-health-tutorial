@@ -11,5 +11,5 @@ Then, run `pnpm dev` to start the development server and visit localhost:3000.
 
 ## License
 
-Template of the app was created using [Nextra](https://nextra.site) and is hosted on [Vercel](https://vercel.com).   
+Template of the app was created using [Nextra](https://nextra.site) and is hosted on [Vercel](https://vercel.com).
 This project is licensed under the MIT License.
